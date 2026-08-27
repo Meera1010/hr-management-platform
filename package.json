@@ -1,0 +1,20 @@
+{
+  "name": "ai-hr-platform-monorepo",
+  "version": "1.0.0",
+  "description": "AI-Powered HR, Recruitment & Employee Management Platform Monorepo",
+  "main": "main.py",
+  "scripts": {
+    "start": "python main.py",
+    "build": "npm run build --prefix frontend",
+    "test": "python -m pytest backend/tests"
+  },
+  "keywords": [
+    "hr",
+    "recruitment",
+    "ats",
+    "payroll",
+    "analytics"
+  ],
+  "author": "Meera1010",
+  "private": true
+}
