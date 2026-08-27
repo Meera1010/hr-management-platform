@@ -1,4 +1,5 @@
-const BASE_URL = 'http://localhost:5001/api';
+const BASE_URL = 'http://localhost:5000/api';
+
 
 const getHeaders = () => {
   const headers = { 'Content-Type': 'application/json' };
@@ -280,7 +281,7 @@ export const getCandidateRankings = async (jobId) => {
 
 // Shortlist Application
 export const shortlistApplication = async (appId) => {
-  const res = await fetch(`http://localhost:5001/api/applications/${appId}/shortlist`, {
+  const res = await fetch(`http://localhost:5000/api/applications/${appId}/shortlist`, {
     method: 'PATCH',
     headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${localStorage.getItem('token')}` }
   });
@@ -315,7 +316,7 @@ export const updateInterview = async (id, payload) => {
 };
 
 export const updateInterviewStatus = async (id, status) => {
-  const res = await fetch(`http://localhost:5001/api/interviews/${id}/status`, {
+  const res = await fetch(`http://localhost:5000/api/interviews/${id}/status`, {
     method: 'PATCH',
     headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${localStorage.getItem('token')}` },
     body: JSON.stringify({ status })
@@ -376,7 +377,7 @@ export const updateOffer = async (id, payload) => {
 };
 
 export const updateOfferStatus = async (id, status) => {
-  const res = await fetch(`http://localhost:5001/api/offers/${id}/status`, {
+  const res = await fetch(`http://localhost:5000/api/offers/${id}/status`, {
     method: 'PATCH',
     headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${localStorage.getItem('token')}` },
     body: JSON.stringify({ status })
@@ -509,7 +510,7 @@ export const getPerformanceReport = async () => {
 
 export const getReportCsvUrl = (reportType) => {
   const token = localStorage.getItem('token');
-  return `http://localhost:5001/api/reports/${reportType}?export=csv`;
+  return `http://localhost:5000/api/reports/${reportType}?export=csv`;
 };
 
 export const globalSearch = async (query) => {
