@@ -41,6 +41,24 @@ def create_app(config_class=Config):
             "message": "Authentication required"
         }), 401
 
+    # Root landing route
+    @app.route('/', methods=['GET'])
+    def root_landing():
+        return """
+        <!DOCTYPE html>
+        <html>
+        <head><title>AI HR Platform API</title></head>
+        <body style="font-family: sans-serif; text-align: center; padding: 50px;">
+          <h1 style="color: #4f46e5;">AI HR Platform Backend API Server</h1>
+          <p style="font-size: 1.2rem;">The REST API backend is active on <strong>http://localhost:5000/api</strong></p>
+          <div style="margin-top: 20px; padding: 20px; background: #f3f4f6; border-radius: 8px; display: inline-block;">
+            <p style="margin-bottom: 15px; font-weight: 500;">To use the Interactive Web Interface, open:</p>
+            <a href="http://localhost:5173" style="display: inline-block; background: #4f46e5; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-weight: bold;">Open Web App (http://localhost:5173)</a>
+          </div>
+        </body>
+        </html>
+        """
+
     # Health check route
     @app.route('/api/health', methods=['GET'])
     def health_check():
@@ -48,6 +66,7 @@ def create_app(config_class=Config):
             "status": "success",
             "message": "AI HR Platform API is running"
         })
+
 
     # Register blueprints
     from app.routes.users import users_bp
