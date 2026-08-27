@@ -1,0 +1,15 @@
+Name: Riley Martin
+Email: candidate007@example.com
+Phone: 555-0199
+
+Objective:
+Driven professional seeking new opportunities.
+
+Summary:
+Junior Software Developer with training in Python, Flask, SQL, Git, HTML, and CSS.
+
+Education:
+BSc Computer Science
+
+Skills:
+Manual Testing, Selenium

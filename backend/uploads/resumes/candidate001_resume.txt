@@ -1,0 +1,15 @@
+Name: Alex Kumar
+Email: candidate001@example.com
+Phone: 555-0199
+
+Objective:
+Driven professional seeking new opportunities.
+
+Summary:
+Senior Python & Full-Stack Developer with 5+ years experience building web applications using Python, Flask, React, SQL, and Docker. Strong background in Git, Linux, and Cloud (AWS).
+
+Education:
+BSc Computer Science
+
+Skills:
+Python, JavaScript, SQL

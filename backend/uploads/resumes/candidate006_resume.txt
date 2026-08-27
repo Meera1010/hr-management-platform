@@ -1,0 +1,15 @@
+Name: Avery Davis
+Email: candidate006@example.com
+Phone: 555-0199
+
+Objective:
+Driven professional seeking new opportunities.
+
+Summary:
+DevOps Engineer focused on Docker, AWS, Azure, Linux, Git, and CI/CD automation pipelines.
+
+Education:
+High School
+
+Skills:
+Data Entry

@@ -1,0 +1,15 @@
+Name: Quinn White
+Email: candidate008@example.com
+Phone: 555-0199
+
+Objective:
+Driven professional seeking new opportunities.
+
+Summary:
+Database Administrator with deep expertise in SQL, MySQL, PostgreSQL, and Database optimization.
+
+Education:
+MSc Marketing
+
+Skills:
+Strategy, SEO, SEM

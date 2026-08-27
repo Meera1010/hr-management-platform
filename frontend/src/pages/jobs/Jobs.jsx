@@ -192,6 +192,17 @@ const Jobs = () => {
                       >
                         View
                       </Button>
+
+                      {canManageJobs && (
+                        <Button 
+                          variant="outline-info" 
+                          size="sm" 
+                          className="me-2"
+                          onClick={() => navigate(`/recruiter/jobs/${job.id}/matches`)}
+                        >
+                          Matches
+                        </Button>
+                      )}
                       
                       {canManageJobs && job.status !== 'Archived' && (
                         <>

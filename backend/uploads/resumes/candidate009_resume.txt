@@ -1,0 +1,15 @@
+Name: Skyler Hall
+Email: candidate009@example.com
+Phone: 555-0199
+
+Objective:
+Driven professional seeking new opportunities.
+
+Summary:
+Frontend Specialist focused on React, JavaScript, HTML, CSS, and UI component design.
+
+Education:
+BA Human Resources
+
+Skills:
+LinkedIn, Boolean Search

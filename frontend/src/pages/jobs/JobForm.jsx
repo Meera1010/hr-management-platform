@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Card, Form, Button, Row, Col, Alert } from 'react-bootstrap';
 import { useNavigate, useParams } from 'react-router-dom';
-import { getJob, createJob, updateJob, api } from '../../services/api';
+import api, { getJob, createJob, updateJob } from '../../services/api';
 import { useAuth } from '../../context/AuthContext';
 
 const JobForm = () => {

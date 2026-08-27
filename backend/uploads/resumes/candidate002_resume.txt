@@ -1,0 +1,15 @@
+Name: Jordan Smith
+Email: candidate002@example.com
+Phone: 555-0199
+
+Objective:
+Driven professional seeking new opportunities.
+
+Summary:
+Backend Engineer specializing in Java, Node.js, PostgreSQL, MongoDB, and Docker. Experience with microservices, AWS, and Linux environment.
+
+Education:
+MSc Software Engineering
+
+Skills:
+Python, Django, Flask

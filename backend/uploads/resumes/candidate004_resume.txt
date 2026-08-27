@@ -1,0 +1,15 @@
+Name: Casey Jones
+Email: candidate004@example.com
+Phone: 555-0199
+
+Objective:
+Driven professional seeking new opportunities.
+
+Summary:
+Cybersecurity Specialist skilled in Cybersecurity, Networking, Nmap, Wireshark, Burp Suite, and Linux system security.
+
+Education:
+BSc Marketing
+
+Skills:
+SEO, Content Creation

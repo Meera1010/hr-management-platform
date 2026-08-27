@@ -1,0 +1,15 @@
+Name: Jamie Lee
+Email: candidate005@example.com
+Phone: 555-0199
+
+Objective:
+Driven professional seeking new opportunities.
+
+Summary:
+Full Stack Developer proficient in JavaScript, React, HTML, CSS, Node.js, and MongoDB.
+
+Education:
+BSc Finance
+
+Skills:
+Excel, Financial Modeling

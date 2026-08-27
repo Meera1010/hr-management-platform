@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Card, Row, Col, Badge, Button, Spinner } from 'react-bootstrap';
 import { useParams, Link } from 'react-router-dom';
-import { getJob } from '../../services/api';
+import api from '../../services/api';
 
 const JobProfile = () => {
   const { id } = useParams();
@@ -16,8 +15,8 @@ const JobProfile = () => {
   const fetchJob = async () => {
     try {
       setLoading(true);
-      const data = await getJob(id);
-      setJob(data);
+      const data = await api.getJob(id);
+      setJob(data.data);
     } catch (err) {
       setError(err.message);
     } finally {
@@ -27,55 +26,55 @@ const JobProfile = () => {
 
   const getStatusBadge = (status) => {
     switch (status) {
-      case 'Open': return 'success';
-      case 'Closed': return 'secondary';
-      case 'Draft': return 'warning';
-      case 'Archived': return 'dark';
-      default: return 'primary';
+      case 'Open': return 'bg-success';
+      case 'Closed': return 'bg-secondary';
+      case 'Draft': return 'bg-warning text-dark';
+      case 'Archived': return 'bg-dark';
+      default: return 'bg-primary';
     }
   };
 
   if (loading) {
     return (
-      <Container className="py-5 text-center">
-        <Spinner animation="border" />
+      <div className="container py-5 text-center">
+        <div className="spinner-border" role="status"></div>
         <p className="mt-3">Loading job details...</p>
-      </Container>
+      </div>
     );
   }
 
   if (error) {
     return (
-      <Container className="py-5 text-center">
+      <div className="container py-5 text-center">
         <div className="alert alert-danger">{error}</div>
-        <Button as={Link} to="/jobs" variant="primary">Back to Jobs</Button>
-      </Container>
+        <Link to="/jobs" className="btn btn-primary">Back to Jobs</Link>
+      </div>
     );
   }
 
   if (!job) return null;
 
   return (
-    <Container className="py-4">
+    <div className="container py-4">
       <div className="mb-4">
-        <Button as={Link} to="/jobs" variant="outline-secondary" className="mb-3">
+        <Link to="/jobs" className="btn btn-outline-secondary mb-3">
           &larr; Back to Jobs
-        </Button>
+        </Link>
         <div className="d-flex justify-content-between align-items-start">
           <div>
             <h2>{job.title}</h2>
             <h5 className="text-muted mb-3">{job.job_code} • {job.department_name}</h5>
           </div>
-          <Badge bg={getStatusBadge(job.status)} className="fs-6 p-2">
+          <span className={`badge ${getStatusBadge(job.status)} fs-6 p-2`}>
             {job.status}
-          </Badge>
+          </span>
         </div>
       </div>
 
-      <Row>
-        <Col md={8}>
-          <Card className="mb-4">
-            <Card.Body>
+      <div className="row">
+        <div className="col-md-8">
+          <div className="card mb-4">
+            <div className="card-body">
               <h5 className="card-title">Job Description</h5>
               <p style={{ whiteSpace: 'pre-wrap' }}>{job.description}</p>
               
@@ -99,16 +98,16 @@ const JobProfile = () => {
                   <p style={{ whiteSpace: 'pre-wrap' }}>{job.preferred_skills}</p>
                 </>
               )}
-            </Card.Body>
-          </Card>
-        </Col>
+            </div>
+          </div>
+        </div>
 
-        <Col md={4}>
-          <Card className="mb-4">
-            <Card.Header className="bg-light">
+        <div className="col-md-4">
+          <div className="card mb-4">
+            <div className="card-header bg-light">
               <h5 className="mb-0">Key Details</h5>
-            </Card.Header>
-            <Card.Body>
+            </div>
+            <div className="card-body">
               <div className="mb-3">
                 <strong>Location:</strong>
                 <div>{job.location || 'Not specified'}</div>
@@ -135,11 +134,11 @@ const JobProfile = () => {
                   <div>{new Date(job.application_deadline).toLocaleDateString()}</div>
                 </div>
               )}
-            </Card.Body>
-          </Card>
-        </Col>
-      </Row>
-    </Container>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 };
 

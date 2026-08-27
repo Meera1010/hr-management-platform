@@ -27,6 +27,7 @@ class Job(db.Model):
     # Relationships
     department = db.relationship('Department', backref=db.backref('jobs', lazy=True))
     creator = db.relationship('User', backref=db.backref('created_jobs', lazy=True))
+    applications = db.relationship('Application', backref='job', lazy=True, cascade='all, delete-orphan')
 
     def to_dict(self):
         return {

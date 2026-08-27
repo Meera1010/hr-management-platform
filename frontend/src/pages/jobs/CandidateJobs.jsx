@@ -1,12 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Row, Col, Card, Button, Form, InputGroup, Badge, Spinner } from 'react-bootstrap';
+import { Container, Row, Col, Card, Button, Form, InputGroup, Badge, Spinner, Modal, Alert } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
-import { getJobs, searchJobs } from '../../services/api';
+import { getJobs, searchJobs, createApplication } from '../../services/api';
 
 const CandidateJobs = () => {
   const navigate = useNavigate();
   const [jobs, setJobs] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [showModal, setShowModal] = useState(false);
+  const [selectedJob, setSelectedJob] = useState(null);
+  const [coverLetter, setCoverLetter] = useState('');
+  const [applyError, setApplyError] = useState(null);
+  const [applySuccess, setApplySuccess] = useState(false);
   const [error, setError] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
 
@@ -42,6 +47,24 @@ const CandidateJobs = () => {
       setError(err.message);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleApplyClick = (job) => {
+    setSelectedJob(job);
+    setApplyError(null);
+    setApplySuccess(false);
+    setCoverLetter('');
+    setShowModal(true);
+  };
+
+  const submitApplication = async () => {
+    try {
+      await createApplication({ job_id: selectedJob.id, cover_letter: coverLetter });
+      setApplySuccess(true);
+      setApplyError(null);
+    } catch (err) {
+      setApplyError(err.message);
     }
   };
 
@@ -105,9 +128,14 @@ const CandidateJobs = () => {
                     <small className="text-muted">
                       {job.application_deadline ? `Apply by ${new Date(job.application_deadline).toLocaleDateString()}` : 'No deadline'}
                     </small>
-                    <Button variant="outline-primary" size="sm" onClick={() => navigate(`/jobs/${job.id}`)}>
-                      View Details
-                    </Button>
+                    <div>
+                      <Button variant="outline-primary" size="sm" className="me-2" onClick={() => navigate(`/jobs/${job.id}`)}>
+                        View
+                      </Button>
+                      <Button variant="primary" size="sm" onClick={() => handleApplyClick(job)}>
+                        Apply
+                      </Button>
+                    </div>
                   </div>
                 </Card.Body>
               </Card>
@@ -115,6 +143,36 @@ const CandidateJobs = () => {
           ))}
         </Row>
       )}
+
+      <Modal show={showModal} onHide={() => setShowModal(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>Apply for {selectedJob?.title}</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          {applyError && <Alert variant="danger">{applyError}</Alert>}
+          {applySuccess && <Alert variant="success">Application submitted successfully!</Alert>}
+          {!applySuccess && (
+            <Form>
+              <Form.Group>
+                <Form.Label>Cover Letter (Optional)</Form.Label>
+                <Form.Control 
+                  as="textarea" 
+                  rows={4} 
+                  value={coverLetter} 
+                  onChange={(e) => setCoverLetter(e.target.value)} 
+                  placeholder="Introduce yourself..."
+                />
+              </Form.Group>
+            </Form>
+          )}
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowModal(false)}>Close</Button>
+          {!applySuccess && (
+            <Button variant="primary" onClick={submitApplication}>Submit Application</Button>
+          )}
+        </Modal.Footer>
+      </Modal>
     </Container>
   );
 };

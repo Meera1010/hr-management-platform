@@ -55,14 +55,67 @@ def create_app(config_class=Config):
     from app.routes.auth import auth_bp
     from app.routes.departments import departments_bp
     from app.routes.employees import employees_bp
-    from app.routes.jobs import jobs_bp
+    from .routes.jobs import jobs_bp
+    from .routes.candidates import candidates_bp
+    from .routes.applications import applications_bp
+    from .routes.resumes import resumes_bp
+    from .routes.matching import matching_bp
+    from .routes.ranking import ranking_bp
+    from .routes.interviews import interviews_bp
+    from .routes.offers import offers_bp
+    from .routes.attendance import attendance_bp
+    from .routes.leaves import leaves_bp
+    from .routes.performance import performance_bp
+    from .routes.training import training_bp
+    from .routes.notifications import notifications_bp
+    from .routes.dashboards import dashboards_bp
+    from .routes.analytics import analytics_bp
+    from .routes.reports import reports_bp
+    from .routes.search import search_bp
+    from .routes.recommendations import recommendations_bp
+    from .routes.payroll import payroll_bp
+    from .routes.assets import assets_bp
+    from .routes.onboarding_exit import onboarding_exit_bp
+    from .routes.okrs import okrs_bp
+    from .routes.learning import learning_bp
+    from .routes.timesheets import timesheets_bp
+    from .routes.expenses import expenses_bp
+    from .routes.compliance import compliance_bp
+    from .routes.workforce import workforce_bp
     
+    app.register_blueprint(auth_bp, url_prefix='/api/auth')
     app.register_blueprint(users_bp, url_prefix='/api/users')
     app.register_blueprint(roles_bp, url_prefix='/api/roles')
-    app.register_blueprint(auth_bp, url_prefix='/api/auth')
     app.register_blueprint(departments_bp, url_prefix='/api/departments')
     app.register_blueprint(employees_bp, url_prefix='/api/employees')
     app.register_blueprint(jobs_bp, url_prefix='/api/jobs')
+    app.register_blueprint(candidates_bp, url_prefix='/api/candidates')
+    app.register_blueprint(applications_bp, url_prefix='/api/applications')
+    app.register_blueprint(resumes_bp, url_prefix='/api/resumes')
+    app.register_blueprint(matching_bp, url_prefix='/api')
+    app.register_blueprint(ranking_bp, url_prefix='/api')
+    app.register_blueprint(interviews_bp, url_prefix='/api/interviews')
+    app.register_blueprint(offers_bp, url_prefix='/api/offers')
+    app.register_blueprint(attendance_bp, url_prefix='/api/attendance')
+    app.register_blueprint(leaves_bp, url_prefix='/api/leaves')
+    app.register_blueprint(performance_bp, url_prefix='/api/performance')
+    app.register_blueprint(training_bp)
+    app.register_blueprint(notifications_bp)
+    app.register_blueprint(dashboards_bp)
+    app.register_blueprint(analytics_bp)
+    app.register_blueprint(reports_bp)
+    app.register_blueprint(search_bp)
+    app.register_blueprint(recommendations_bp)
+    app.register_blueprint(payroll_bp, url_prefix='/api/payroll')
+    app.register_blueprint(assets_bp, url_prefix='/api/assets')
+    app.register_blueprint(onboarding_exit_bp, url_prefix='/api/lifecycle')
+    app.register_blueprint(okrs_bp, url_prefix='/api/okrs')
+    app.register_blueprint(learning_bp, url_prefix='/api/learning')
+    app.register_blueprint(timesheets_bp, url_prefix='/api/timesheets')
+    app.register_blueprint(expenses_bp, url_prefix='/api/expenses')
+    app.register_blueprint(compliance_bp, url_prefix='/api/compliance')
+    app.register_blueprint(workforce_bp, url_prefix='/api/workforce')
+
 
     # Create db tables on startup if they don't exist
     with app.app_context():
@@ -72,6 +125,27 @@ def create_app(config_class=Config):
         from app.models.department import Department
         from app.models.employee import Employee
         from app.models.job import Job
+        from app.models.candidate import Candidate
+        from app.models.application import Application
+        from app.models.resume import Resume
+        from app.models.skill import Skill
+        from app.models.interview import Interview
+        from app.models.interview_feedback import InterviewFeedback
+        from app.models.offer import Offer
+        from app.models.attendance import Attendance
+        from app.models.leave_request import LeaveRequest
+        from app.models.performance_review import PerformanceReview
+        from app.models.training import TrainingCourse, TrainingAssignment
+        from app.models.notification import Notification
+        from app.models.payroll import SalaryStructure, EmployeeSalary, PayrollRun, PaySlip, TaxDeclaration
+        from app.models.assets import AssetCategory, Asset, AssetAssignment, AssetMaintenance, SoftwareLicense, ITTicket
+        from app.models.onboarding_exit import OnboardingChecklist, OnboardingTask, EmployeeDocument, ResignationRequest, ExitClearance, FnFSettlement
+        from app.models.okr_performance import Objective, KeyResult, ReviewCycle, Feedback360, PerformanceImprovementPlan
+        from app.models.learning import Course, CourseModule, CourseEnrollment, Quiz, QuizQuestion, Certificate
+        from app.models.timesheet_shift import Timesheet, TimesheetEntry, Shift, EmployeeShiftRoster, OvertimeClaim
+        from app.models.expense_travel import ExpenseCategory, ExpenseClaim, ExpenseItem, TravelRequest
+        from app.models.compliance_audit import GrievanceTicket, GrievanceLog, CompanyPolicy, PolicyAcknowledgment, AuditLog
+        from app.models.workforce_analytics import WorkforcePlan, AttritionRiskScore, SalaryBenchmark
         db.create_all()
 
     return app

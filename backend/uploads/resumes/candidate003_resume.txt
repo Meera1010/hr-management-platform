@@ -1,0 +1,15 @@
+Name: Taylor Wilson
+Email: candidate003@example.com
+Phone: 555-0199
+
+Objective:
+Driven professional seeking new opportunities.
+
+Summary:
+Data Analyst and Machine Learning enthusiast with expertise in Data Analysis, Python, SQL, PostgreSQL, and Data Visualizations.
+
+Education:
+BA Business
+
+Skills:
+Communication, Sourcing

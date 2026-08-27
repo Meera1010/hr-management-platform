@@ -1,10 +1,34 @@
 from functools import wraps
 from flask import jsonify
-from flask_jwt_extended import get_jwt_identity, verify_jwt_in_request
+from flask_jwt_extended import jwt_required, get_jwt_identity, verify_jwt_in_request
 from app.models.user import User
 from app.models.role import Role
 
+def get_current_user():
+    verify_jwt_in_request()
+    user_id = get_jwt_identity()
+    return User.query.get(user_id)
+
+def token_required(fn):
+    @wraps(fn)
+    @jwt_required()
+    def wrapper(*args, **kwargs):
+        user_id = get_jwt_identity()
+        current_user = User.query.get(user_id)
+        if not current_user or not current_user.is_active:
+            return jsonify({"success": False, "message": "Authentication required"}), 401
+        return fn(current_user, *args, **kwargs)
+    return wrapper
+
 def role_required(*allowed_roles):
+    # Flatten if passed list e.g. role_required(['Admin', 'HR'])
+    roles_set = set()
+    for item in allowed_roles:
+        if isinstance(item, (list, tuple, set)):
+            roles_set.update(item)
+        else:
+            roles_set.add(item)
+
     def decorator(fn):
         @wraps(fn)
         def wrapper(*args, **kwargs):
@@ -15,7 +39,7 @@ def role_required(*allowed_roles):
             if not user or not user.is_active:
                 return jsonify({"success": False, "message": "Authentication required"}), 401
                 
-            if not user.role or user.role.name not in allowed_roles:
+            if not user.role or user.role.name not in roles_set:
                 return jsonify({"success": False, "message": "You do not have permission to access this resource"}), 403
                 
             return fn(*args, **kwargs)

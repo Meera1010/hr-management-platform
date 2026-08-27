@@ -80,6 +80,13 @@ export const getRole = async (id) => {
   return res.data;
 };
 
+export const getEmployees = async (params = {}) => {
+  const query = new URLSearchParams(params).toString();
+  const res = await api.get(`/employees/?${query}`);
+  if (!res.success) throw new Error(res.message);
+  return res.data;
+};
+
 // Jobs API
 export const getJobs = async (params = {}) => {
   const query = new URLSearchParams(params).toString();
@@ -112,6 +119,62 @@ export const updateJob = async (id, data) => {
   return res.data;
 };
 
+// Candidate API
+export const getCandidates = async (params) => {
+  const query = new URLSearchParams(params).toString();
+  const res = await api.get(`/candidates/?${query}`);
+  if (!res.success) throw new Error(res.message);
+  return res.data;
+};
+export const getCandidate = async (id) => {
+  const res = await api.get(`/candidates/${id}`);
+  if (!res.success) throw new Error(res.message);
+  return res.data;
+};
+export const createCandidate = async (data) => {
+  const res = await api.post('/candidates/', data);
+  if (!res.success) throw new Error(res.message);
+  return res.data;
+};
+export const updateCandidate = async (id, data) => {
+  const res = await api.put(`/candidates/${id}`, data);
+  if (!res.success) throw new Error(res.message);
+  return res.data;
+};
+export const updateCandidateStatus = async (id, status) => {
+  const res = await api.patch(`/candidates/${id}/status`, { status });
+  if (!res.success) throw new Error(res.message);
+  return res.data;
+};
+
+// Application API
+export const getApplications = async (params) => {
+  const query = new URLSearchParams(params).toString();
+  const res = await api.get(`/applications/?${query}`);
+  if (!res.success) throw new Error(res.message);
+  return res.data;
+};
+export const getApplication = async (id) => {
+  const res = await api.get(`/applications/${id}`);
+  if (!res.success) throw new Error(res.message);
+  return res.data;
+};
+export const createApplication = async (data) => {
+  const res = await api.post('/applications/', data);
+  if (!res.success) throw new Error(res.message);
+  return res.data;
+};
+export const updateApplicationStatus = async (id, data) => {
+  const res = await api.patch(`/applications/${id}/status`, data);
+  if (!res.success) throw new Error(res.message);
+  return res.data;
+};
+export const withdrawApplication = async (id) => {
+  const res = await api.delete(`/applications/${id}`);
+  if (!res.success) throw new Error(res.message);
+  return res.data;
+};
+
 export const changeJobStatus = async (id, status) => {
   const res = await fetchWithAuth(`/jobs/${id}/status`, {
     method: 'PATCH',
@@ -125,4 +188,344 @@ export const archiveJob = async (id) => {
   const res = await api.delete(`/jobs/${id}`);
   if (!res.success) throw new Error(res.message);
   return res;
+};
+
+// Resume API Services
+export const uploadResume = async (formData) => {
+  const token = localStorage.getItem('token');
+  const response = await fetch(`${BASE_URL}/resumes/upload`, {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${token}`
+    },
+    body: formData
+  });
+  const data = await response.json();
+  if (!response.ok) throw new Error(data.message || 'Failed to upload resume');
+  return data.data;
+};
+
+export const getResumes = async (params = {}) => {
+  const query = new URLSearchParams(params).toString();
+  const res = await api.get(`/resumes?${query}`);
+  if (!res.success) throw new Error(res.message);
+  return res.data;
+};
+
+export const getResume = async (id) => {
+  const res = await api.get(`/resumes/${id}`);
+  if (!res.success) throw new Error(res.message);
+  return res.data;
+};
+
+export const deleteResume = async (id) => {
+  const res = await api.delete(`/resumes/${id}`);
+  if (!res.success) throw new Error(res.message);
+  return res.data;
+};
+
+export const downloadResume = async (id) => {
+  const token = localStorage.getItem('token');
+  const response = await fetch(`${BASE_URL}/resumes/${id}/download`, {
+    headers: { 'Authorization': `Bearer ${token}` }
+  });
+  if (!response.ok) throw new Error('Download failed');
+  const blob = await response.blob();
+  return blob;
+};
+
+export const extractSkills = async (id) => {
+  const token = localStorage.getItem('token');
+  const response = await fetch(`${BASE_URL}/resumes/${id}/extract-skills`, {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    }
+  });
+  const data = await response.json();
+  if (!response.ok) throw new Error(data.message || 'Failed to extract skills');
+  return data.data;
+};
+
+// Job Matching API Services
+export const getCandidateMatches = async (candidateId) => {
+  const res = await api.get(`/candidates/${candidateId}/matches`);
+  if (!res.success) throw new Error(res.message);
+  return res.data;
+};
+
+export const getJobCandidateMatches = async (jobId, candidateId) => {
+  const res = await api.get(`/jobs/${jobId}/match/${candidateId}`);
+  if (!res.success) throw new Error(res.message);
+  return res.data;
+};
+
+export const getJobCandidateMatchesList = async (jobId) => {
+  const res = await api.get(`/jobs/${jobId}/matches`);
+  if (!res.success) throw new Error(res.message);
+  return res.data;
+};
+
+// ============================================================
+// STEP 9: Candidate Ranking, Interviews, Feedback, Offers
+// ============================================================
+
+// Candidate Ranking
+export const getCandidateRankings = async (jobId) => {
+  const res = await api.get(`/jobs/${jobId}/rank-candidates`);
+  if (!res.success) throw new Error(res.message);
+  return res.data;
+};
+
+// Shortlist Application
+export const shortlistApplication = async (appId) => {
+  const res = await fetch(`http://localhost:5001/api/applications/${appId}/shortlist`, {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${localStorage.getItem('token')}` }
+  });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.message || 'Failed to shortlist');
+  return data;
+};
+
+// Interviews
+export const getInterviews = async (params = '') => {
+  const res = await api.get(`/interviews${params}`);
+  if (!res.success) throw new Error(res.message);
+  return res.data;
+};
+
+export const getInterview = async (id) => {
+  const res = await api.get(`/interviews/${id}`);
+  if (!res.success) throw new Error(res.message);
+  return res.data;
+};
+
+export const createInterview = async (payload) => {
+  const res = await api.post('/interviews', payload);
+  if (!res.success) throw new Error(res.message);
+  return res.data;
+};
+
+export const updateInterview = async (id, payload) => {
+  const res = await api.put(`/interviews/${id}`, payload);
+  if (!res.success) throw new Error(res.message);
+  return res.data;
+};
+
+export const updateInterviewStatus = async (id, status) => {
+  const res = await fetch(`http://localhost:5001/api/interviews/${id}/status`, {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${localStorage.getItem('token')}` },
+    body: JSON.stringify({ status })
+  });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.message || 'Failed to update status');
+  return data;
+};
+
+export const deleteInterview = async (id) => {
+  const res = await api.delete(`/interviews/${id}`);
+  if (!res.success) throw new Error(res.message);
+  return res.data;
+};
+
+// Interview Feedback
+export const submitInterviewFeedback = async (interviewId, payload) => {
+  const res = await api.post(`/interviews/${interviewId}/feedback`, payload);
+  if (!res.success) throw new Error(res.message);
+  return res.data;
+};
+
+export const getInterviewFeedback = async (interviewId) => {
+  const res = await api.get(`/interviews/${interviewId}/feedback`);
+  if (!res.success) throw new Error(res.message);
+  return res.data;
+};
+
+export const updateInterviewFeedback = async (interviewId, payload) => {
+  const res = await api.put(`/interviews/${interviewId}/feedback`, payload);
+  if (!res.success) throw new Error(res.message);
+  return res.data;
+};
+
+// Offers
+export const getOffers = async () => {
+  const res = await api.get('/offers');
+  if (!res.success) throw new Error(res.message);
+  return res.data;
+};
+
+export const getOffer = async (id) => {
+  const res = await api.get(`/offers/${id}`);
+  if (!res.success) throw new Error(res.message);
+  return res.data;
+};
+
+export const createOffer = async (payload) => {
+  const res = await api.post('/offers', payload);
+  if (!res.success) throw new Error(res.message);
+  return res.data;
+};
+
+export const updateOffer = async (id, payload) => {
+  const res = await api.put(`/offers/${id}`, payload);
+  if (!res.success) throw new Error(res.message);
+  return res.data;
+};
+
+export const updateOfferStatus = async (id, status) => {
+  const res = await fetch(`http://localhost:5001/api/offers/${id}/status`, {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${localStorage.getItem('token')}` },
+    body: JSON.stringify({ status })
+  });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.message || 'Failed to update offer status');
+  return data;
+};
+
+export const deleteOffer = async (id) => {
+  const res = await api.delete(`/offers/${id}`);
+  if (!res.success) throw new Error(res.message);
+  return res.data;
+};
+
+export const acceptOffer = async (id) => {
+  const res = await api.post(`/offers/${id}/accept`, {});
+  if (!res.success) throw new Error(res.message);
+  return res.data;
+};
+
+export const declineOffer = async (id) => {
+  const res = await api.post(`/offers/${id}/decline`, {});
+  if (!res.success) throw new Error(res.message);
+  return res.data;
+};
+
+// ============================================================
+// Training & Notifications
+// ============================================================
+export const getTrainingCourses = async (params = {}) => {
+  const query = new URLSearchParams(params).toString();
+  const res = await api.get(`/training/courses?${query}`);
+  if (!res.success) throw new Error(res.message);
+  return res.data;
+};
+
+export const createTrainingCourse = async (data) => {
+  const res = await api.post('/training/courses', data);
+  if (!res.success) throw new Error(res.message);
+  return res.data;
+};
+
+export const assignTraining = async (data) => {
+  const res = await api.post('/training/assignments', data);
+  if (!res.success) throw new Error(res.message);
+  return res.data;
+};
+
+export const getMyTrainings = async () => {
+  const res = await api.get('/training/my-trainings');
+  if (!res.success) throw new Error(res.message);
+  return res.data;
+};
+
+export const updateTrainingAssignment = async (id, data) => {
+  const res = await api.put(`/training/assignments/${id}`, data);
+  if (!res.success) throw new Error(res.message);
+  return res.data;
+};
+
+export const getAllTrainingAssignments = async () => {
+  const res = await api.get('/training/assignments');
+  if (!res.success) throw new Error(res.message);
+  return res.data;
+};
+
+export const getNotifications = async () => {
+  const res = await api.get('/notifications');
+  if (!res.success) throw new Error(res.message);
+  return res;
+};
+
+export const markNotificationRead = async (id) => {
+  const res = await api.put(`/notifications/${id}/read`, {});
+  if (!res.success) throw new Error(res.message);
+  return res.data;
+};
+
+export const markAllNotificationsRead = async () => {
+  const res = await api.put('/notifications/read-all', {});
+  if (!res.success) throw new Error(res.message);
+  return res.data;
+};
+
+export const deleteNotification = async (id) => {
+  const res = await api.delete(`/notifications/${id}`);
+  if (!res.success) throw new Error(res.message);
+  return res.data;
+};
+
+// ============================================================
+// Dashboards, Analytics, Reports, Search, Recommendations
+// ============================================================
+export const getDashboardStats = async () => {
+  const res = await api.get('/dashboards/stats');
+  if (!res.success) throw new Error(res.message);
+  return res.data;
+};
+
+export const getAnalyticsOverview = async () => {
+  const res = await api.get('/analytics/overview');
+  if (!res.success) throw new Error(res.message);
+  return res.data;
+};
+
+export const getHeadcountReport = async () => {
+  const res = await api.get('/reports/headcount');
+  if (!res.success) throw new Error(res.message);
+  return res.data;
+};
+
+export const getAttendanceReport = async () => {
+  const res = await api.get('/reports/attendance');
+  if (!res.success) throw new Error(res.message);
+  return res.data;
+};
+
+export const getRecruitmentReport = async () => {
+  const res = await api.get('/reports/recruitment');
+  if (!res.success) throw new Error(res.message);
+  return res.data;
+};
+
+export const getPerformanceReport = async () => {
+  const res = await api.get('/reports/performance');
+  if (!res.success) throw new Error(res.message);
+  return res.data;
+};
+
+export const getReportCsvUrl = (reportType) => {
+  const token = localStorage.getItem('token');
+  return `http://localhost:5001/api/reports/${reportType}?export=csv`;
+};
+
+export const globalSearch = async (query) => {
+  const res = await api.get(`/search?q=${encodeURIComponent(query)}`);
+  if (!res.success) throw new Error(res.message);
+  return res;
+};
+
+export const getMyCareerRecommendations = async () => {
+  const res = await api.get('/recommendations/my-recommendations');
+  if (!res.success) throw new Error(res.message);
+  return res.data;
+};
+
+export const getJobCandidateMatchesAI = async (jobId) => {
+  const res = await api.get(`/recommendations/job-matches/${jobId}`);
+  if (!res.success) throw new Error(res.message);
+  return res.data;
 };
