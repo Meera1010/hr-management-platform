@@ -139,130 +139,95 @@ function Navigation() {
               </li>
             )}
             
-            {/* Dynamic Role-Based Links */}
-            {currentUser?.role === 'Admin' && (
+            {/* Streamlined Category Dropdowns */}
+            {(currentUser?.role === 'Admin' || currentUser?.role === 'HR' || currentUser?.role === 'Recruiter') && (
               <>
-                <li className="nav-item">
-                  <Link className="nav-link" to="/admin/users">Manage Users</Link>
+                {/* Recruitment Dropdown */}
+                <li className="nav-item dropdown">
+                  <a className="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Recruitment</a>
+                  <ul className="dropdown-menu">
+                    <li><Link className="dropdown-item" to="/jobs">Manage Jobs</Link></li>
+                    <li><Link className="dropdown-item" to="/hr/candidates">Candidates Pool</Link></li>
+                    <li><Link className="dropdown-item" to="/applications">Applications</Link></li>
+                    <li><Link className="dropdown-item" to={currentUser?.role === 'Recruiter' ? "/recruiter/resumes" : "/hr/resumes"}>Resumes Vault</Link></li>
+                    {currentUser?.role === 'Recruiter' && (
+                      <>
+                        <li><Link className="dropdown-item" to="/recruiter/rankings">AI Resume Rankings</Link></li>
+                        <li><Link className="dropdown-item" to="/recruiter/interviews">Interviews</Link></li>
+                      </>
+                    )}
+                    {(currentUser?.role === 'HR' || currentUser?.role === 'Admin') && (
+                      <li><Link className="dropdown-item" to="/hr/offers">Offers Management</Link></li>
+                    )}
+                  </ul>
                 </li>
-                <li className="nav-item">
-                  <Link className="nav-link" to="/admin/roles">Manage Roles</Link>
-                </li>
-              </>
-            )}
 
-            {(currentUser?.role === 'Admin' || currentUser?.role === 'HR') && (
-              <>
-                <li className="nav-item">
-                  <Link className="nav-link" to="/hr/departments">Departments</Link>
+                {/* Workforce & HR Dropdown */}
+                <li className="nav-item dropdown">
+                  <a className="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Workforce & HR</a>
+                  <ul className="dropdown-menu">
+                    <li><Link className="dropdown-item" to="/hr/employees">Employee Directory</Link></li>
+                    <li><Link className="dropdown-item" to="/hr/departments">Departments</Link></li>
+                    <li><Link className="dropdown-item" to="/lifecycle">Onboarding & Exit</Link></li>
+                    <li><Link className="dropdown-item" to="/okrs">Performance & OKRs</Link></li>
+                    <li><Link className="dropdown-item" to="/workforce">Workforce Planner</Link></li>
+                  </ul>
                 </li>
-                <li className="nav-item">
-                  <Link className="nav-link" to="/hr/employees">Employees</Link>
+
+                {/* Operations & Finance Dropdown */}
+                <li className="nav-item dropdown">
+                  <a className="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Operations</a>
+                  <ul className="dropdown-menu">
+                    <li><Link className="dropdown-item" to="/payroll">Payroll & Tax</Link></li>
+                    <li><Link className="dropdown-item" to="/assets">IT Assets</Link></li>
+                    <li><Link className="dropdown-item" to="/timesheets">Timesheets</Link></li>
+                    <li><Link className="dropdown-item" to="/expenses">Expense Claims</Link></li>
+                    <li><Link className="dropdown-item" to="/compliance">Compliance Center</Link></li>
+                  </ul>
                 </li>
-                <li className="nav-item">
-                  <Link className="nav-link" to="/payroll">Payroll</Link>
+
+                {/* Analytics Dropdown */}
+                <li className="nav-item dropdown">
+                  <a className="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Analytics</a>
+                  <ul className="dropdown-menu">
+                    <li><Link className="dropdown-item" to="/training">LXP Training</Link></li>
+                    <li><Link className="dropdown-item" to="/analytics">Executive Analytics</Link></li>
+                    <li><Link className="dropdown-item" to="/reports">Reports Generator</Link></li>
+                  </ul>
                 </li>
-                <li className="nav-item">
-                  <Link className="nav-link" to="/assets">Assets</Link>
-                </li>
-                <li className="nav-item">
-                  <Link className="nav-link" to="/lifecycle">Lifecycle</Link>
-                </li>
-                <li className="nav-item">
-                  <Link className="nav-link" to="/okrs">OKRs</Link>
-                </li>
-                <li className="nav-item">
-                  <Link className="nav-link" to="/workforce">Workforce</Link>
-                </li>
-                <li className="nav-item">
-                  <Link className="nav-link" to="/training">Training</Link>
-                </li>
-                <li className="nav-item">
-                  <Link className="nav-link" to="/analytics">Analytics</Link>
-                </li>
-                <li className="nav-item">
-                  <Link className="nav-link" to="/reports">Reports</Link>
-                </li>
-              </>
-            )}
-            
-            {['Admin', 'HR', 'Recruiter'].includes(currentUser?.role) && (
-              <>
-                <li className="nav-item">
-                  <Link className="nav-link" to="/jobs">Manage Jobs</Link>
-                </li>
-                <li className="nav-item">
-                  <Link className="nav-link" to="/hr/candidates">Candidates</Link>
-                </li>
-                <li className="nav-item">
-                  <Link className="nav-link" to="/applications">Applications</Link>
-                </li>
-                <li className="nav-item">
-                  <Link className="nav-link" to={currentUser?.role === 'Recruiter' ? "/recruiter/resumes" : "/hr/resumes"}>Resumes</Link>
-                </li>
-                {currentUser?.role === 'Recruiter' && (
-                  <>
-                    <li className="nav-item">
-                      <Link className="nav-link" to="/recruiter/rankings">AI Rankings</Link>
-                    </li>
-                    <li className="nav-item">
-                      <Link className="nav-link" to="/recruiter/interviews">Interviews</Link>
-                    </li>
-                  </>
-                )}
-                {(currentUser?.role === 'HR' || currentUser?.role === 'Admin') && (
-                  <li className="nav-item">
-                    <Link className="nav-link" to="/hr/offers">Offers</Link>
+
+                {currentUser?.role === 'Admin' && (
+                  <li className="nav-item dropdown">
+                    <a className="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Admin Settings</a>
+                    <ul className="dropdown-menu">
+                      <li><Link className="dropdown-item" to="/admin/users">Manage Users</Link></li>
+                      <li><Link className="dropdown-item" to="/admin/roles">Manage Roles</Link></li>
+                    </ul>
                   </li>
                 )}
               </>
             )}
-            
-            {['Candidate'].includes(currentUser?.role) && (
+
+            {currentUser?.role === 'Candidate' && (
               <>
-                <li className="nav-item">
-                  <Link className="nav-link" to="/candidate/jobs">Find Jobs</Link>
-                </li>
-                <li className="nav-item">
-                  <Link className="nav-link" to="/candidate/applications">My Applications</Link>
-                </li>
-                <li className="nav-item">
-                  <Link className="nav-link" to="/candidate/resumes">My Resumes</Link>
-                </li>
-                <li className="nav-item">
-                  <Link className="nav-link" to="/candidate/matches">Job Matches</Link>
-                </li>
-                <li className="nav-item">
-                  <Link className="nav-link" to="/candidate/interviews">My Interviews</Link>
-                </li>
-                <li className="nav-item">
-                  <Link className="nav-link" to="/candidate/offers">My Offers</Link>
-                </li>
-                <li className="nav-item">
-                  <Link className="nav-link text-warning" to="/career-recommendations">AI Recommendations</Link>
-                </li>
+                <li className="nav-item"><Link className="nav-link" to="/candidate/jobs">Find Jobs</Link></li>
+                <li className="nav-item"><Link className="nav-link" to="/candidate/applications">My Applications</Link></li>
+                <li className="nav-item"><Link className="nav-link" to="/candidate/interviews">My Interviews</Link></li>
+                <li className="nav-item"><Link className="nav-link" to="/candidate/offers">My Offers</Link></li>
+                <li className="nav-item"><Link className="nav-link text-warning" to="/career-recommendations">AI Recommendations</Link></li>
               </>
             )}
 
-            {['Employee', 'Interviewer'].includes(currentUser?.role) && (
+            {currentUser?.role === 'Employee' && (
               <>
-                <li className="nav-item">
-                  <Link className="nav-link" to="/learning">LXP Courses</Link>
-                </li>
-                <li className="nav-item">
-                  <Link className="nav-link" to="/timesheets">Timesheets</Link>
-                </li>
-                <li className="nav-item">
-                  <Link className="nav-link" to="/expenses">Expenses</Link>
-                </li>
-                <li className="nav-item">
-                  <Link className="nav-link" to="/compliance">Compliance</Link>
-                </li>
-                <li className="nav-item">
-                  <Link className="nav-link text-warning" to="/career-recommendations">AI Growth</Link>
-                </li>
+                <li className="nav-item"><Link className="nav-link" to="/payroll">My Payroll</Link></li>
+                <li className="nav-item"><Link className="nav-link" to="/timesheets">My Timesheet</Link></li>
+                <li className="nav-item"><Link className="nav-link" to="/expenses">My Expenses</Link></li>
+                <li className="nav-item"><Link className="nav-link" to="/learning">LXP Courses</Link></li>
+                <li className="nav-item"><Link className="nav-link text-warning" to="/career-recommendations">AI Growth</Link></li>
               </>
             )}
+
 
           </ul>
 
