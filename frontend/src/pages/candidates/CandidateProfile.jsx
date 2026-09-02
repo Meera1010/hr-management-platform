@@ -12,9 +12,9 @@ function CandidateProfile() {
     const fetchCandidate = async () => {
       try {
         const res = await api.getCandidate(id);
-        setCandidate(res.data.candidate);
+        setCandidate(res?.candidate || res?.data?.candidate || res?.data || res);
       } catch (err) {
-        setError(err.response?.data?.message || 'Failed to load candidate');
+        setError(err.message || err.response?.data?.message || 'Failed to load candidate');
       } finally {
         setLoading(false);
       }

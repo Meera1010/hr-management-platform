@@ -24,7 +24,7 @@ export default function TaxDeclarationForm() {
   const fetchDeclarations = async () => {
     try {
       const res = await payrollApi.getTaxDeclarations();
-      setDeclarations(res.data.declarations || []);
+      setDeclarations(res?.declarations || res?.data?.declarations || []);
     } catch (err) {
       console.error(err);
     }

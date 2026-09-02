@@ -22,7 +22,8 @@ function EmployeeForm() {
     const fetchDepartments = async () => {
       try {
         const response = await api.get('/departments/');
-        setDepartments(response.data.data);
+        const deptList = response.data?.departments || response.data?.data || response.data || response.departments || [];
+        setDepartments(Array.isArray(deptList) ? deptList : []);
       } catch (err) {
         console.error('Failed to fetch departments');
       }
@@ -40,7 +41,7 @@ function EmployeeForm() {
       await api.post('/employees/', formData);
       navigate('/hr/employees');
     } catch (err) {
-      setError(err.response?.data?.message || 'Failed to create employee');
+      setError(err.message || err.response?.data?.message || 'Failed to create employee');
     }
   };
 

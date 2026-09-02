@@ -21,11 +21,11 @@ export default function WorkforcePlanner() {
         workforceApi.getAttritionRisks(),
         workforceApi.getBenchmarks()
       ]);
-      setPlans(pRes.data.plans || []);
-      setRisks(rRes.data.attrition_risks || []);
-      setBenchmarks(bRes.data.benchmarks || []);
+      setPlans(pRes?.plans || pRes?.data?.plans || []);
+      setRisks(rRes?.attrition_risks || rRes?.data?.attrition_risks || []);
+      setBenchmarks(bRes?.benchmarks || bRes?.data?.benchmarks || []);
     } catch (err) {
-      setError(err.response?.data?.message || 'Failed to fetch workforce analytics');
+      setError(err.message || err.response?.data?.message || 'Failed to fetch workforce analytics');
     } finally {
       setLoading(false);
     }

@@ -12,7 +12,7 @@ function EmployeeProfile() {
     const fetchEmployee = async () => {
       try {
         const response = await api.get(`/employees/${id}`);
-        setEmployee(response.data.data);
+        setEmployee(response.data?.data || response.data || response);
         setLoading(false);
       } catch (err) {
         setError('Failed to fetch employee details');

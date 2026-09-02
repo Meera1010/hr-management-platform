@@ -21,10 +21,11 @@ function Candidates() {
       if (statusFilter) params.status = statusFilter;
 
       const response = await api.getCandidates(params);
-      setCandidates(response.data.candidates);
-      setCurrentPage(response.data.current_page);
-      setTotalPages(response.data.total_pages);
-      setTotalRecords(response.data.total_records);
+      const data = response?.data || response || {};
+      setCandidates(data.candidates || []);
+      setCurrentPage(data.current_page || 1);
+      setTotalPages(data.total_pages || 1);
+      setTotalRecords(data.total_records || (data.candidates ? data.candidates.length : 0));
     } catch (error) {
       console.error('Error fetching candidates:', error);
     } finally {

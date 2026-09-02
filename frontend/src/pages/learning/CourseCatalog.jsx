@@ -19,10 +19,10 @@ export default function CourseCatalog() {
         learningApi.getCourses(),
         learningApi.getEnrollments()
       ]);
-      setCourses(cRes.data.courses || []);
-      setEnrollments(eRes.data.enrollments || []);
+      setCourses(cRes?.courses || cRes?.data?.courses || []);
+      setEnrollments(eRes?.enrollments || eRes?.data?.enrollments || []);
     } catch (err) {
-      setError(err.response?.data?.message || 'Failed to fetch courses');
+      setError(err.message || err.response?.data?.message || 'Failed to fetch courses');
     } finally {
       setLoading(false);
     }

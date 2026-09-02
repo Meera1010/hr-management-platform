@@ -19,10 +19,10 @@ export default function GrievanceCenter() {
         complianceApi.getGrievances(),
         complianceApi.getPolicies()
       ]);
-      setGrievances(gRes.data.tickets || []);
-      setPolicies(pRes.data.policies || []);
+      setGrievances(gRes?.tickets || gRes?.data?.tickets || []);
+      setPolicies(pRes?.policies || pRes?.data?.policies || []);
     } catch (err) {
-      setError(err.response?.data?.message || 'Failed to fetch compliance data');
+      setError(err.message || err.response?.data?.message || 'Failed to fetch compliance data');
     } finally {
       setLoading(false);
     }
