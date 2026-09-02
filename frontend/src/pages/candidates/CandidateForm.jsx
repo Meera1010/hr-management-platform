@@ -29,7 +29,7 @@ function CandidateForm() {
       const fetchCandidate = async () => {
         try {
           const res = await api.getCandidate(id);
-          const c = res.data.candidate;
+          const c = res?.candidate || res?.data?.candidate || res?.data || res || {};
           setFormData({
             candidate_code: c.candidate_code || '',
             first_name: c.first_name || '',
@@ -45,7 +45,7 @@ function CandidateForm() {
             status: c.status || 'Available'
           });
         } catch (err) {
-          setError(err.response?.data?.message || 'Failed to fetch candidate');
+          setError(err.message || err.response?.data?.message || 'Failed to fetch candidate');
         } finally {
           setLoading(false);
         }

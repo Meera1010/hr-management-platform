@@ -19,10 +19,10 @@ export default function OnboardingDashboard() {
         onboardingApi.getChecklists(),
         onboardingApi.getResignations()
       ]);
-      setChecklists(cRes.data.checklists || []);
-      setResignations(rRes.data.resignations || []);
+      setChecklists(cRes?.checklists || cRes?.data?.checklists || []);
+      setResignations(rRes?.resignations || rRes?.data?.resignations || []);
     } catch (err) {
-      setError(err.response?.data?.message || 'Failed to fetch lifecycle data');
+      setError(err.message || err.response?.data?.message || 'Failed to fetch lifecycle data');
     } finally {
       setLoading(false);
     }

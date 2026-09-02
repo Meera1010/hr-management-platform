@@ -19,10 +19,10 @@ export default function AssetDirectory() {
         assetApi.getAssets(),
         assetApi.getItTickets()
       ]);
-      setAssets(aRes.data.assets || []);
-      setTickets(tRes.data.tickets || []);
+      setAssets(aRes?.assets || aRes?.data?.assets || []);
+      setTickets(tRes?.tickets || tRes?.data?.tickets || []);
     } catch (err) {
-      setError(err.response?.data?.message || 'Failed to fetch asset inventory');
+      setError(err.message || err.response?.data?.message || 'Failed to fetch asset inventory');
     } finally {
       setLoading(false);
     }

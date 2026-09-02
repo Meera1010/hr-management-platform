@@ -407,6 +407,109 @@ export const declineOffer = async (id) => {
 };
 
 // ============================================================
+// Attendance Management
+// ============================================================
+export const getAttendance = async (params = {}) => {
+  const query = new URLSearchParams(params).toString();
+  const res = await api.get(`/attendance?${query}`);
+  if (!res.success) throw new Error(res.message || 'Failed to fetch attendance');
+  return res;
+};
+
+export const createAttendance = async (data) => {
+  const res = await api.post('/attendance', data);
+  if (!res.success) throw new Error(res.message || 'Failed to record attendance');
+  return res.data;
+};
+
+export const updateAttendance = async (id, data) => {
+  const res = await api.put(`/attendance/${id}`, data);
+  if (!res.success) throw new Error(res.message || 'Failed to update attendance');
+  return res.data;
+};
+
+export const checkIn = async (data = {}) => {
+  const res = await api.post('/attendance/check-in', data);
+  if (!res.success) throw new Error(res.message || 'Failed to check in');
+  return res.data;
+};
+
+export const checkOut = async (data = {}) => {
+  const res = await api.post('/attendance/check-out', data);
+  if (!res.success) throw new Error(res.message || 'Failed to check out');
+  return res.data;
+};
+
+export const getAttendanceSummary = async (params = {}) => {
+  const query = new URLSearchParams(params).toString();
+  const res = await api.get(`/attendance/summary?${query}`);
+  if (!res.success) throw new Error(res.message || 'Failed to fetch attendance summary');
+  return res.data;
+};
+
+// ============================================================
+// Leave Management
+// ============================================================
+export const getLeaves = async (params = {}) => {
+  const query = new URLSearchParams(params).toString();
+  const res = await api.get(`/leaves?${query}`);
+  if (!res.success) throw new Error(res.message || 'Failed to fetch leaves');
+  return res;
+};
+
+export const createLeave = async (data) => {
+  const res = await api.post('/leaves', data);
+  if (!res.success) throw new Error(res.message || 'Failed to submit leave request');
+  return res.data;
+};
+
+export const approveLeave = async (id, comments = '') => {
+  const res = await api.post(`/leaves/${id}/approve`, { comments });
+  if (!res.success) throw new Error(res.message || 'Failed to approve leave');
+  return res.data;
+};
+
+export const rejectLeave = async (id, comments = '') => {
+  const res = await api.post(`/leaves/${id}/reject`, { comments });
+  if (!res.success) throw new Error(res.message || 'Failed to reject leave');
+  return res.data;
+};
+
+export const cancelLeave = async (id) => {
+  const res = await api.post(`/leaves/${id}/cancel`, {});
+  if (!res.success) throw new Error(res.message || 'Failed to cancel leave');
+  return res.data;
+};
+
+// ============================================================
+// Performance Management
+// ============================================================
+export const getPerformanceReviews = async (params = {}) => {
+  const query = new URLSearchParams(params).toString();
+  const res = await api.get(`/performance?${query}`);
+  if (!res.success) throw new Error(res.message || 'Failed to fetch performance reviews');
+  return res;
+};
+
+export const createPerformanceReview = async (data) => {
+  const res = await api.post('/performance', data);
+  if (!res.success) throw new Error(res.message || 'Failed to create performance review');
+  return res.data;
+};
+
+export const updatePerformanceReview = async (id, data) => {
+  const res = await api.put(`/performance/${id}`, data);
+  if (!res.success) throw new Error(res.message || 'Failed to update performance review');
+  return res.data;
+};
+
+export const deletePerformanceReview = async (id) => {
+  const res = await api.delete(`/performance/${id}`);
+  if (!res.success) throw new Error(res.message || 'Failed to delete performance review');
+  return res.data;
+};
+
+// ============================================================
 // Training & Notifications
 // ============================================================
 export const getTrainingCourses = async (params = {}) => {
@@ -532,28 +635,45 @@ export const getJobCandidateMatchesAI = async (jobId) => {
   return res.data;
 };
 
+<<<<<<< HEAD
 // ============================================================
 // Leaves API
 // ============================================================
 export const getLeaves = async (params = {}) => {
   const query = new URLSearchParams(params).toString();
   const res = await api.get(`/leaves/?${query}`);
+=======
+// Candidate Profile helper
+export const getMyCandidateProfile = async () => {
+  const res = await api.get('/candidates/me');
+>>>>>>> 8ff31b8c099d5cec38965a82ac8c6e030c590ab3
   if (!res.success) throw new Error(res.message);
   return res.data;
 };
 
+<<<<<<< HEAD
 export const createLeave = async (data) => {
   const res = await api.post('/leaves/', data);
+=======
+export const updateMyCandidateProfile = async (data) => {
+  const res = await api.put('/candidates/me', data);
+>>>>>>> 8ff31b8c099d5cec38965a82ac8c6e030c590ab3
   if (!res.success) throw new Error(res.message);
   return res.data;
 };
 
+<<<<<<< HEAD
 export const approveLeave = async (id) => {
   const res = await api.patch(`/leaves/${id}/approve`, {});
+=======
+export const deactivateCandidate = async (id) => {
+  const res = await api.patch(`/candidates/${id}/status`, { status: 'Inactive' });
+>>>>>>> 8ff31b8c099d5cec38965a82ac8c6e030c590ab3
   if (!res.success) throw new Error(res.message);
   return res.data;
 };
 
+<<<<<<< HEAD
 export const rejectLeave = async (id, reason = '') => {
   const res = await api.patch(`/leaves/${id}/reject`, { rejection_reason: reason });
   if (!res.success) throw new Error(res.message);
@@ -639,3 +759,99 @@ export const getDepartments = async () => {
   if (!res.success) throw new Error(res.message);
   return res.data;
 };
+=======
+// Bind all named helpers onto api object for universal compatibility
+Object.assign(api, {
+  getUsers,
+  getUser,
+  createUser,
+  updateUser,
+  deactivateUser,
+  getRoles,
+  getRole,
+  getEmployees,
+  getJobs,
+  searchJobs,
+  getJob,
+  createJob,
+  updateJob,
+  changeJobStatus,
+  archiveJob,
+  getCandidates,
+  getCandidate,
+  createCandidate,
+  updateCandidate,
+  updateCandidateStatus,
+  deactivateCandidate,
+  getMyCandidateProfile,
+  updateMyCandidateProfile,
+  getApplications,
+  getApplication,
+  createApplication,
+  updateApplicationStatus,
+  withdrawApplication,
+  shortlistApplication,
+  uploadResume,
+  getResumes,
+  getResume,
+  deleteResume,
+  downloadResume,
+  extractSkills,
+  getCandidateMatches,
+  getJobCandidateMatches,
+  getJobCandidateMatchesList,
+  getCandidateRankings,
+  getInterviews,
+  getInterview,
+  createInterview,
+  updateInterview,
+  updateInterviewStatus,
+  deleteInterview,
+  submitInterviewFeedback,
+  getInterviewFeedback,
+  updateInterviewFeedback,
+  getOffers,
+  getOffer,
+  createOffer,
+  updateOffer,
+  updateOfferStatus,
+  deleteOffer,
+  acceptOffer,
+  declineOffer,
+  getAttendance,
+  createAttendance,
+  updateAttendance,
+  checkIn,
+  checkOut,
+  getAttendanceSummary,
+  getLeaves,
+  createLeave,
+  approveLeave,
+  rejectLeave,
+  cancelLeave,
+  getPerformanceReviews,
+  createPerformanceReview,
+  updatePerformanceReview,
+  deletePerformanceReview,
+  getTrainingCourses,
+  createTrainingCourse,
+  assignTraining,
+  getMyTrainings,
+  updateTrainingAssignment,
+  getAllTrainingAssignments,
+  getNotifications,
+  markNotificationRead,
+  markAllNotificationsRead,
+  deleteNotification,
+  getDashboardStats,
+  getAnalyticsOverview,
+  getHeadcountReport,
+  getAttendanceReport,
+  getRecruitmentReport,
+  getPerformanceReport,
+  getReportCsvUrl,
+  globalSearch,
+  getMyCareerRecommendations,
+  getJobCandidateMatchesAI
+});
+>>>>>>> 8ff31b8c099d5cec38965a82ac8c6e030c590ab3

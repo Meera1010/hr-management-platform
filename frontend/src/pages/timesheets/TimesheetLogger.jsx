@@ -19,10 +19,10 @@ export default function TimesheetLogger() {
         timesheetApi.getTimesheets(),
         timesheetApi.getRosters()
       ]);
-      setTimesheets(tRes.data.timesheets || []);
-      setRosters(rRes.data.rosters || []);
+      setTimesheets(tRes?.timesheets || tRes?.data?.timesheets || []);
+      setRosters(rRes?.rosters || rRes?.data?.rosters || []);
     } catch (err) {
-      setError(err.response?.data?.message || 'Failed to fetch timesheets');
+      setError(err.message || err.response?.data?.message || 'Failed to fetch timesheets');
     } finally {
       setLoading(false);
     }

@@ -19,10 +19,10 @@ export default function OkrDashboard() {
         okrApi.getObjectives(),
         okrApi.get360Feedback()
       ]);
-      setObjectives(oRes.data.objectives || []);
-      setFeedbacks(fRes.data.feedbacks || []);
+      setObjectives(oRes?.objectives || oRes?.data?.objectives || []);
+      setFeedbacks(fRes?.feedbacks || fRes?.data?.feedbacks || []);
     } catch (err) {
-      setError(err.response?.data?.message || 'Failed to fetch OKR data');
+      setError(err.message || err.response?.data?.message || 'Failed to fetch OKR data');
     } finally {
       setLoading(false);
     }

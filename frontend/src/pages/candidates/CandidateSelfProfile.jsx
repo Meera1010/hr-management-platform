@@ -18,10 +18,11 @@ function CandidateSelfProfile() {
     try {
       setLoading(true);
       const res = await api.getMyCandidateProfile();
-      setCandidate(res.data.candidate);
-      setFormData(res.data.candidate);
+      const cand = res?.candidate || res?.data?.candidate || res?.data || res;
+      setCandidate(cand);
+      setFormData(cand || {});
     } catch (err) {
-      setError(err.response?.data?.message || 'Failed to load your profile');
+      setError(err.message || err.response?.data?.message || 'Failed to load your profile');
     } finally {
       setLoading(false);
     }
@@ -41,11 +42,12 @@ function CandidateSelfProfile() {
     setSuccessMsg(null);
     try {
       const res = await api.updateMyCandidateProfile(formData);
-      setCandidate(res.data.candidate);
+      const cand = res?.candidate || res?.data?.candidate || res?.data || res;
+      setCandidate(cand);
       setSuccessMsg('Profile updated successfully!');
       setIsEditing(false);
     } catch (err) {
-      setError(err.response?.data?.message || 'Failed to update profile');
+      setError(err.message || err.response?.data?.message || 'Failed to update profile');
     }
   };
 

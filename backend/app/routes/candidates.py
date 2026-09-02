@@ -144,7 +144,8 @@ def get_candidate(id):
 @candidates_bp.route('/me', methods=['GET'])
 @role_required('Candidate')
 def get_my_profile():
-    user_id = get_jwt_identity()
+    raw_id = get_jwt_identity()
+    user_id = int(raw_id) if raw_id is not None else None
     candidate = Candidate.query.filter_by(user_id=user_id).first()
     
     if not candidate:
@@ -158,7 +159,8 @@ def get_my_profile():
 @candidates_bp.route('/me', methods=['PUT'])
 @role_required('Candidate')
 def update_my_profile():
-    user_id = get_jwt_identity()
+    raw_id = get_jwt_identity()
+    user_id = int(raw_id) if raw_id is not None else None
     candidate = Candidate.query.filter_by(user_id=user_id).first()
     
     if not candidate:
