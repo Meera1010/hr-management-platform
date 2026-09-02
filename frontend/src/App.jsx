@@ -29,7 +29,13 @@ import InterviewFormPage from './pages/recruiter/InterviewForm';
 import InterviewFeedbackForm from './pages/recruiter/InterviewFeedbackForm';
 import CandidateInterviews from './pages/candidate/CandidateInterviews';
 import HROffers from './pages/hr/HROffers';
+import HRLeaves from './pages/hr/HRLeaves';
+import HRAttendance from './pages/hr/HRAttendance';
+import HRPerformance from './pages/hr/HRPerformance';
 import CandidateOffers from './pages/candidate/CandidateOffers';
+import EmployeeAttendance from './pages/employee/EmployeeAttendance';
+import EmployeeLeaves from './pages/employee/EmployeeLeaves';
+import EmployeePerformance from './pages/employee/EmployeePerformance';
 
 // Step 11+ Components and Pages
 import HRDashboard from './pages/dashboards/HRDashboard';
@@ -168,6 +174,9 @@ function Navigation() {
                   <ul className="dropdown-menu">
                     <li><Link className="dropdown-item" to="/hr/employees">Employee Directory</Link></li>
                     <li><Link className="dropdown-item" to="/hr/departments">Departments</Link></li>
+                    <li><Link className="dropdown-item" to="/hr/leaves">Leave Management</Link></li>
+                    <li><Link className="dropdown-item" to="/hr/attendance">Attendance</Link></li>
+                    <li><Link className="dropdown-item" to="/hr/performance">Performance Reviews</Link></li>
                     <li><Link className="dropdown-item" to="/lifecycle">Onboarding & Exit</Link></li>
                     <li><Link className="dropdown-item" to="/okrs">Performance & OKRs</Link></li>
                     <li><Link className="dropdown-item" to="/workforce">Workforce Planner</Link></li>
@@ -223,6 +232,9 @@ function Navigation() {
                 <li className="nav-item"><Link className="nav-link" to="/payroll">My Payroll</Link></li>
                 <li className="nav-item"><Link className="nav-link" to="/timesheets">My Timesheet</Link></li>
                 <li className="nav-item"><Link className="nav-link" to="/expenses">My Expenses</Link></li>
+                <li className="nav-item"><Link className="nav-link" to="/employee/attendance">My Attendance</Link></li>
+                <li className="nav-item"><Link className="nav-link" to="/employee/leaves">My Leaves</Link></li>
+                <li className="nav-item"><Link className="nav-link" to="/employee/performance">My Performance</Link></li>
                 <li className="nav-item"><Link className="nav-link" to="/learning">LXP Courses</Link></li>
                 <li className="nav-item"><Link className="nav-link text-warning" to="/career-recommendations">AI Growth</Link></li>
               </>
@@ -310,6 +322,16 @@ function App() {
               <Route path="/hr/employees" element={<Employees />} />
               <Route path="/hr/employees/new" element={<EmployeeForm />} />
               <Route path="/hr/employees/:id" element={<EmployeeProfile />} />
+              <Route path="/hr/leaves" element={<HRLeaves />} />
+              <Route path="/hr/attendance" element={<HRAttendance />} />
+              <Route path="/hr/performance" element={<HRPerformance />} />
+            </Route>
+
+            {/* Employee Self-Service Routes */}
+            <Route element={<ProtectedRoute allowedRoles={['Admin', 'HR', 'Employee']} />}>
+              <Route path="/employee/attendance" element={<EmployeeAttendance />} />
+              <Route path="/employee/leaves" element={<EmployeeLeaves />} />
+              <Route path="/employee/performance" element={<EmployeePerformance />} />
             </Route>
             
             {/* Jobs Routes */}

@@ -1,4 +1,4 @@
-const BASE_URL = 'http://localhost:5000/api';
+const BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5001/api';
 
 
 const getHeaders = () => {
@@ -33,6 +33,7 @@ const api = {
   get: (endpoint) => fetchWithAuth(endpoint, { method: 'GET' }),
   post: (endpoint, body) => fetchWithAuth(endpoint, { method: 'POST', body: JSON.stringify(body) }),
   put: (endpoint, body) => fetchWithAuth(endpoint, { method: 'PUT', body: JSON.stringify(body) }),
+  patch: (endpoint, body) => fetchWithAuth(endpoint, { method: 'PATCH', body: JSON.stringify(body) }),
   delete: (endpoint) => fetchWithAuth(endpoint, { method: 'DELETE' }),
 };
 
@@ -281,7 +282,7 @@ export const getCandidateRankings = async (jobId) => {
 
 // Shortlist Application
 export const shortlistApplication = async (appId) => {
-  const res = await fetch(`http://localhost:5000/api/applications/${appId}/shortlist`, {
+  const res = await fetch(`${BASE_URL}/applications/${appId}/shortlist`, {
     method: 'PATCH',
     headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${localStorage.getItem('token')}` }
   });
@@ -316,7 +317,7 @@ export const updateInterview = async (id, payload) => {
 };
 
 export const updateInterviewStatus = async (id, status) => {
-  const res = await fetch(`http://localhost:5000/api/interviews/${id}/status`, {
+  const res = await fetch(`${BASE_URL}/interviews/${id}/status`, {
     method: 'PATCH',
     headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${localStorage.getItem('token')}` },
     body: JSON.stringify({ status })
@@ -377,7 +378,7 @@ export const updateOffer = async (id, payload) => {
 };
 
 export const updateOfferStatus = async (id, status) => {
-  const res = await fetch(`http://localhost:5000/api/offers/${id}/status`, {
+  const res = await fetch(`${BASE_URL}/offers/${id}/status`, {
     method: 'PATCH',
     headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${localStorage.getItem('token')}` },
     body: JSON.stringify({ status })
@@ -510,7 +511,7 @@ export const getPerformanceReport = async () => {
 
 export const getReportCsvUrl = (reportType) => {
   const token = localStorage.getItem('token');
-  return `http://localhost:5000/api/reports/${reportType}?export=csv`;
+  return `${BASE_URL}/reports/${reportType}?export=csv`;
 };
 
 export const globalSearch = async (query) => {
@@ -527,6 +528,114 @@ export const getMyCareerRecommendations = async () => {
 
 export const getJobCandidateMatchesAI = async (jobId) => {
   const res = await api.get(`/recommendations/job-matches/${jobId}`);
+  if (!res.success) throw new Error(res.message);
+  return res.data;
+};
+
+// ============================================================
+// Leaves API
+// ============================================================
+export const getLeaves = async (params = {}) => {
+  const query = new URLSearchParams(params).toString();
+  const res = await api.get(`/leaves/?${query}`);
+  if (!res.success) throw new Error(res.message);
+  return res.data;
+};
+
+export const createLeave = async (data) => {
+  const res = await api.post('/leaves/', data);
+  if (!res.success) throw new Error(res.message);
+  return res.data;
+};
+
+export const approveLeave = async (id) => {
+  const res = await api.patch(`/leaves/${id}/approve`, {});
+  if (!res.success) throw new Error(res.message);
+  return res.data;
+};
+
+export const rejectLeave = async (id, reason = '') => {
+  const res = await api.patch(`/leaves/${id}/reject`, { rejection_reason: reason });
+  if (!res.success) throw new Error(res.message);
+  return res.data;
+};
+
+export const cancelLeave = async (id) => {
+  const res = await api.patch(`/leaves/${id}/cancel`, {});
+  if (!res.success) throw new Error(res.message);
+  return res.data;
+};
+
+// ============================================================
+// Attendance API
+// ============================================================
+export const getAttendance = async (params = {}) => {
+  const query = new URLSearchParams(params).toString();
+  const res = await api.get(`/attendance/?${query}`);
+  if (!res.success) throw new Error(res.message);
+  return res.data;
+};
+
+export const createAttendance = async (data) => {
+  const res = await api.post('/attendance/', data);
+  if (!res.success) throw new Error(res.message);
+  return res.data;
+};
+
+export const updateAttendance = async (id, data) => {
+  const res = await api.put(`/attendance/${id}`, data);
+  if (!res.success) throw new Error(res.message);
+  return res.data;
+};
+
+export const checkIn = async () => {
+  const res = await api.post('/attendance/check-in', {});
+  if (!res.success) throw new Error(res.message);
+  return res.data;
+};
+
+export const checkOut = async () => {
+  const res = await api.post('/attendance/check-out', {});
+  if (!res.success) throw new Error(res.message);
+  return res.data;
+};
+
+export const getAttendanceSummary = async (employeeId) => {
+  const res = await api.get(`/attendance/summary/${employeeId}`);
+  if (!res.success) throw new Error(res.message);
+  return res.data;
+};
+
+// ============================================================
+// Performance Reviews API
+// ============================================================
+export const getPerformanceReviews = async (params = {}) => {
+  const query = new URLSearchParams(params).toString();
+  const res = await api.get(`/performance/?${query}`);
+  if (!res.success) throw new Error(res.message);
+  return res.data;
+};
+
+export const createPerformanceReview = async (data) => {
+  const res = await api.post('/performance/', data);
+  if (!res.success) throw new Error(res.message);
+  return res.data;
+};
+
+export const updatePerformanceReview = async (id, data) => {
+  const res = await api.put(`/performance/${id}`, data);
+  if (!res.success) throw new Error(res.message);
+  return res.data;
+};
+
+export const deletePerformanceReview = async (id) => {
+  const res = await api.delete(`/performance/${id}`);
+  if (!res.success) throw new Error(res.message);
+  return res.data;
+};
+
+export const getDepartments = async () => {
+  const res = await api.get('/departments/');
   if (!res.success) throw new Error(res.message);
   return res.data;
 };
