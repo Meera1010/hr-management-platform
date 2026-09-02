@@ -4,17 +4,25 @@ from flask_jwt_extended import jwt_required, get_jwt_identity, verify_jwt_in_req
 from app.models.user import User
 from app.models.role import Role
 
+def _get_user_by_identity(identity):
+    if identity is None:
+        return None
+    try:
+        return User.query.get(int(identity))
+    except (ValueError, TypeError):
+        return User.query.get(identity)
+
 def get_current_user():
     verify_jwt_in_request()
     user_id = get_jwt_identity()
-    return User.query.get(user_id)
+    return _get_user_by_identity(user_id)
 
 def token_required(fn):
     @wraps(fn)
     @jwt_required()
     def wrapper(*args, **kwargs):
         user_id = get_jwt_identity()
-        current_user = User.query.get(user_id)
+        current_user = _get_user_by_identity(user_id)
         if not current_user or not current_user.is_active:
             return jsonify({"success": False, "message": "Authentication required"}), 401
         return fn(current_user, *args, **kwargs)
@@ -34,7 +42,7 @@ def role_required(*allowed_roles):
         def wrapper(*args, **kwargs):
             verify_jwt_in_request()
             user_id = get_jwt_identity()
-            user = User.query.get(user_id)
+            user = _get_user_by_identity(user_id)
             
             if not user or not user.is_active:
                 return jsonify({"success": False, "message": "Authentication required"}), 401

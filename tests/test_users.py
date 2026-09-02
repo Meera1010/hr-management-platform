@@ -1,13 +1,24 @@
+import os
+import sys
 import pytest
+from sqlalchemy.pool import StaticPool
+
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), 'backend')))
+
 from app import create_app, db
 from app.config import Config
 from app.models.user import User
 from app.models.role import Role
+from flask_jwt_extended import create_access_token
 
 class TestConfig(Config):
     TESTING = True
-    SQLALCHEMY_DATABASE_URI = 'sqlite:///:memory:'
-    JWT_SECRET_KEY = 'test-jwt-secret'
+    SQLALCHEMY_DATABASE_URI = 'sqlite://'
+    SQLALCHEMY_ENGINE_OPTIONS = {
+        'poolclass': StaticPool,
+        'connect_args': {'check_same_thread': False}
+    }
+    JWT_SECRET_KEY = 'test-jwt-secret-very-secure-32-chars-long-key!'
 
 @pytest.fixture
 def client():
@@ -31,12 +42,11 @@ def client():
             
         yield client
 
-from flask_jwt_extended import create_access_token
 @pytest.fixture
 def auth_headers(client):
     with client.application.app_context():
         admin = User.query.filter_by(email='admin@test.com').first()
-        token = create_access_token(identity=admin.id)
+        token = create_access_token(identity=str(admin.id))
         return {'Authorization': f'Bearer {token}'}
 
 def test_database_connection(client):
