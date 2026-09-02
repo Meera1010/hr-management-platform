@@ -19,10 +19,10 @@ export default function ExpenseClaimList() {
         expenseApi.getClaims(),
         expenseApi.getTravelRequests()
       ]);
-      setClaims(cRes.data.claims || []);
-      setTravels(tRes.data.requests || []);
+      setClaims(cRes?.claims || cRes?.data?.claims || []);
+      setTravels(tRes?.requests || tRes?.data?.requests || []);
     } catch (err) {
-      setError(err.response?.data?.message || 'Failed to fetch expense claims');
+      setError(err.message || err.response?.data?.message || 'Failed to fetch expense claims');
     } finally {
       setLoading(false);
     }

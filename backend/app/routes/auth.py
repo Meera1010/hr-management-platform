@@ -29,7 +29,7 @@ def login():
         return error_response('Invalid credentials', 401)
         
     # Generate access token
-    access_token = create_access_token(identity=user.id)
+    access_token = create_access_token(identity=str(user.id))
     
     return success_response('Login successful', {
         'access_token': access_token,
@@ -53,8 +53,9 @@ def logout():
 @auth_bp.route('/me', methods=['GET'])
 @jwt_required()
 def get_current_user():
-    user_id = get_jwt_identity()
-    user = User.query.get(user_id)
+    raw_id = get_jwt_identity()
+    user_id = int(raw_id) if raw_id is not None else None
+    user = User.query.get(user_id) if user_id is not None else None
     
     if not user or not user.is_active:
         return error_response('Authentication required', 401)
@@ -78,8 +79,9 @@ def change_password():
     current_password = data.get('current_password')
     new_password = data.get('new_password')
     
-    user_id = get_jwt_identity()
-    user = User.query.get(user_id)
+    raw_id = get_jwt_identity()
+    user_id = int(raw_id) if raw_id is not None else None
+    user = User.query.get(user_id) if user_id is not None else None
     
     if not user or not user.is_active:
         return error_response('Authentication required', 401)

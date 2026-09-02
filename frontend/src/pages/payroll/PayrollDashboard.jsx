@@ -25,11 +25,11 @@ export default function PayrollDashboard() {
         payrollApi.getPayslips(),
         payrollApi.getEmployeeSalaries()
       ]);
-      setRuns(rRes.data.runs || []);
-      setPayslips(pRes.data.payslips || []);
-      setSalaries(sRes.data.salaries || []);
+      setRuns(rRes?.runs || rRes?.data?.runs || []);
+      setPayslips(pRes?.payslips || pRes?.data?.payslips || []);
+      setSalaries(sRes?.salaries || sRes?.data?.salaries || []);
     } catch (err) {
-      setError(err.response?.data?.message || 'Failed to fetch payroll data');
+      setError(err.message || err.response?.data?.message || 'Failed to fetch payroll data');
     } finally {
       setLoading(false);
     }

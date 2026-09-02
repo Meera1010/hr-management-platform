@@ -11,9 +11,16 @@ employees_bp = Blueprint('employees', __name__)
 
 def get_current_user():
     user_id = get_jwt_identity()
-    return User.query.get(user_id)
+    if user_id is None:
+        return None
+    try:
+        return User.query.get(int(user_id))
+    except (ValueError, TypeError):
+        return User.query.get(user_id)
 
 def can_view_employee(current_user, employee_id=None, employee=None):
+    if not current_user or not current_user.role:
+        return False
     if current_user.role.name in ['Admin', 'HR', 'Recruiter']:
         return True
     if current_user.role.name == 'Employee':
@@ -25,14 +32,16 @@ def can_view_employee(current_user, employee_id=None, employee=None):
     return False
 
 def can_manage_employee(current_user):
-    return current_user.role.name in ['Admin', 'HR']
+    return current_user and current_user.role and current_user.role.name in ['Admin', 'HR']
 
 @employees_bp.route('/', methods=['GET'])
 @jwt_required()
 def get_employees():
     current_user = get_current_user()
+    if not current_user or not current_user.is_active:
+        return jsonify({"success": False, "message": "Authentication required"}), 401
     
-    if current_user.role.name in ['Candidate', 'Interviewer']:
+    if not current_user.role or current_user.role.name in ['Candidate', 'Interviewer']:
         return jsonify({"success": False, "message": "Access denied"}), 403
         
     # Query parameters for filtering and pagination

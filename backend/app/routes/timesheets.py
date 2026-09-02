@@ -11,7 +11,8 @@ timesheets_bp = Blueprint('timesheets', __name__)
 @token_required
 def get_timesheets(current_user):
     emp = getattr(current_user, 'employee', None)
-    if current_user.role in ['Admin', 'HR']:
+    role_name = current_user.role.name if (current_user and current_user.role) else ''
+    if role_name in ['Admin', 'HR']:
         timesheets = Timesheet.query.order_by(Timesheet.week_start_date.desc()).all()
     else:
         if not emp:
@@ -31,7 +32,8 @@ def create_timesheet(current_user):
         return jsonify({'message': 'week_start_date and week_end_date are required'}), 400
 
     emp = getattr(current_user, 'employee', None)
-    emp_id = data.get('employee_id') if current_user.role in ['Admin', 'HR'] and data.get('employee_id') else (emp.id if emp else current_user.id)
+    role_name = current_user.role.name if (current_user and current_user.role) else ''
+    emp_id = data.get('employee_id') if role_name in ['Admin', 'HR'] and data.get('employee_id') else (emp.id if emp else current_user.id)
 
     s_date = datetime.strptime(start_date_str, '%Y-%m-%d').date()
     e_date = datetime.strptime(end_date_str, '%Y-%m-%d').date()
@@ -95,7 +97,8 @@ def create_shift(current_user):
 @token_required
 def get_rosters(current_user):
     emp = getattr(current_user, 'employee', None)
-    if current_user.role in ['Admin', 'HR']:
+    role_name = current_user.role.name if (current_user and current_user.role) else ''
+    if role_name in ['Admin', 'HR']:
         rosters = EmployeeShiftRoster.query.order_by(EmployeeShiftRoster.roster_date.desc()).all()
     else:
         if not emp:
@@ -108,7 +111,8 @@ def get_rosters(current_user):
 @token_required
 def get_overtime_claims(current_user):
     emp = getattr(current_user, 'employee', None)
-    if current_user.role in ['Admin', 'HR']:
+    role_name = current_user.role.name if (current_user and current_user.role) else ''
+    if role_name in ['Admin', 'HR']:
         claims = OvertimeClaim.query.all()
     else:
         if not emp:

@@ -1,9 +1,20 @@
 from datetime import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
+from flask_sqlalchemy.query import Query
 from app import db
+
+class SafeUserQuery(Query):
+    def get(self, ident):
+        if ident is None:
+            return None
+        try:
+            return super().get(int(ident))
+        except (ValueError, TypeError):
+            return super().get(ident)
 
 class User(db.Model):
     __tablename__ = 'users'
+    query_class = SafeUserQuery
 
     id = db.Column(db.Integer, primary_key=True)
     first_name = db.Column(db.String(50), nullable=False)

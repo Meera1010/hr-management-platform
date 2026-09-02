@@ -12,6 +12,22 @@ class Role(db.Model):
     # Relationship to User
     users = db.relationship('User', back_populates='role')
 
+    def __eq__(self, other):
+        if isinstance(other, str):
+            return self.name == other
+        if isinstance(other, Role):
+            return self.id == other.id
+        return super().__eq__(other)
+
+    def __str__(self):
+        return self.name or ''
+
+    def __repr__(self):
+        return f"<Role {self.name}>"
+
+    def __hash__(self):
+        return hash(self.name)
+
     def to_dict(self):
         return {
             'id': self.id,
