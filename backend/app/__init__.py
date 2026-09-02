@@ -16,11 +16,6 @@ def create_app(config_class=Config):
     app.config.from_object(config_class)
     app.url_map.strict_slashes = False
 
-    # Ensure directories exist
-    os.makedirs(DB_DIR, exist_ok=True)
-    if app.config.get('UPLOAD_FOLDER'):
-        os.makedirs(app.config.get('UPLOAD_FOLDER'), exist_ok=True)
-
     # Initialize extensions
     db.init_app(app)
     CORS(app)

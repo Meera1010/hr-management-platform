@@ -1,4 +1,10 @@
+import os
+import sys
 import pytest
+from sqlalchemy.pool import StaticPool
+
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
 from app import create_app, db
 from app.config import Config
 from app.models.user import User
@@ -7,8 +13,12 @@ from flask_jwt_extended import create_access_token
 
 class TestConfig(Config):
     TESTING = True
-    SQLALCHEMY_DATABASE_URI = 'sqlite:///:memory:'
-    JWT_SECRET_KEY = 'test-jwt-secret'
+    SQLALCHEMY_DATABASE_URI = 'sqlite://'
+    SQLALCHEMY_ENGINE_OPTIONS = {
+        'poolclass': StaticPool,
+        'connect_args': {'check_same_thread': False}
+    }
+    JWT_SECRET_KEY = 'test-jwt-secret-very-secure-32-chars-long-key!'
 
 @pytest.fixture
 def app_context():
@@ -73,12 +83,10 @@ def hr_headers(client, app_context):
         role = Role(name='HR', description='HR Specialist')
         db.session.add(role)
         db.session.commit()
-    user = User.query.filter_by(email='hr_test@example.com').first()
-    if not user:
-        user = User(first_name='HR', last_name='Test', email='hr_test@example.com', role_id=role.id)
-        user.set_password('password')
-        db.session.add(user)
-        db.session.commit()
+    user = User(first_name='HR', last_name='Test', email='hr_test@example.com', role_id=role.id)
+    user.set_password('password')
+    db.session.add(user)
+    db.session.commit()
     token = create_access_token(identity=str(user.id))
     return {'Authorization': f'Bearer {token}'}
 
@@ -90,12 +98,10 @@ def employee_headers(client, app_context):
         role = Role(name='Employee', description='Employee')
         db.session.add(role)
         db.session.commit()
-    user = User.query.filter_by(email='employee_test@example.com').first()
-    if not user:
-        user = User(first_name='Employee', last_name='Test', email='employee_test@example.com', role_id=role.id)
-        user.set_password('password')
-        db.session.add(user)
-        db.session.commit()
+    user = User(first_name='Employee', last_name='Test', email='employee_test@example.com', role_id=role.id)
+    user.set_password('password')
+    db.session.add(user)
+    db.session.commit()
     token = create_access_token(identity=str(user.id))
     return {'Authorization': f'Bearer {token}'}
 
@@ -106,12 +112,10 @@ def candidate_headers(client, app_context):
         role = Role(name='Candidate', description='Candidate')
         db.session.add(role)
         db.session.commit()
-    user = User.query.filter_by(email='candidate_test@example.com').first()
-    if not user:
-        user = User(first_name='Candidate', last_name='Test', email='candidate_test@example.com', role_id=role.id)
-        user.set_password('password')
-        db.session.add(user)
-        db.session.commit()
+    user = User(first_name='Candidate', last_name='Test', email='candidate_test@example.com', role_id=role.id)
+    user.set_password('password')
+    db.session.add(user)
+    db.session.commit()
     token = create_access_token(identity=str(user.id))
     # Also create a candidate profile for this user to test /me routes
     from app.models.candidate import Candidate
@@ -126,3 +130,4 @@ def candidate_headers(client, app_context):
     db.session.add(candidate)
     db.session.commit()
     return {'Authorization': f'Bearer {token}'}
+
