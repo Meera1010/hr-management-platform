@@ -11,7 +11,12 @@ const getHeaders = () => {
 };
 
 async function handleResponse(response) {
-  const data = await response.json();
+  let data = {};
+  try {
+    data = await response.json();
+  } catch (e) {
+    data = {};
+  }
   if (!response.ok) {
     return { success: false, message: data.message || 'Something went wrong' };
   }
@@ -19,22 +24,80 @@ async function handleResponse(response) {
 }
 
 async function fetchWithAuth(endpoint, options = {}) {
-  const response = await fetch(`${BASE_URL}${endpoint}`, {
-    ...options,
-    headers: {
-      ...getHeaders(),
-      ...options.headers,
-    },
-  });
-  return handleResponse(response);
+  try {
+    const response = await fetch(`${BASE_URL}${endpoint}`, {
+      ...options,
+      headers: {
+        ...getHeaders(),
+        ...options.headers,
+      },
+    });
+    return await handleResponse(response);
+  } catch (e) {
+    return { success: false, message: 'Network error: could not reach the server' };
+  }
 }
 
 const api = {
-  get: (endpoint) => fetchWithAuth(endpoint, { method: 'GET' }),
+  get: (endpoint, options = {}) => {
+    const query = new URLSearchParams(options.params || {}).toString();
+    const url = query ? `${endpoint}?${query}` : endpoint;
+    return fetchWithAuth(url, { method: 'GET' });
+  },
   post: (endpoint, body) => fetchWithAuth(endpoint, { method: 'POST', body: JSON.stringify(body) }),
   put: (endpoint, body) => fetchWithAuth(endpoint, { method: 'PUT', body: JSON.stringify(body) }),
   patch: (endpoint, body) => fetchWithAuth(endpoint, { method: 'PATCH', body: JSON.stringify(body) }),
   delete: (endpoint) => fetchWithAuth(endpoint, { method: 'DELETE' }),
+};
+
+// Attach candidate/job/self-profile helpers to the default api object so
+// pages can call api.getCandidates(), api.getCandidate(), etc.
+api.getCandidates = async (params = {}) => {
+  const res = await api.get('/candidates/', { params });
+  if (!res.success) throw new Error(res.message);
+  return res;
+};
+
+api.getCandidate = async (id) => {
+  const res = await api.get(`/candidates/${id}`);
+  if (!res.success) throw new Error(res.message);
+  return res;
+};
+
+api.createCandidate = async (data) => {
+  const res = await api.post('/candidates/', data);
+  if (!res.success) throw new Error(res.message);
+  return res;
+};
+
+api.updateCandidate = async (id, data) => {
+  const res = await api.put(`/candidates/${id}`, data);
+  if (!res.success) throw new Error(res.message);
+  return res;
+};
+
+api.deactivateCandidate = async (id) => {
+  const res = await api.delete(`/candidates/${id}`);
+  if (!res.success) throw new Error(res.message);
+  return res.data;
+};
+
+api.getJob = async (id) => {
+  const res = await api.get(`/jobs/${id}`);
+  if (!res.success) throw new Error(res.message);
+  return res;
+};
+
+api.getMyCandidateProfile = async () => {
+  const res = await api.get('/candidates/me');
+  if (!res.success) throw new Error(res.message);
+  return res;
+};
+
+api.updateMyCandidateProfile = async (data) => {
+  const res = await api.put('/candidates/me', data);
+  if (!res.success) throw new Error(res.message);
+  return res;
 };
 
 export default api;
@@ -613,8 +676,27 @@ export const getPerformanceReport = async () => {
 };
 
 export const getReportCsvUrl = (reportType) => {
-  const token = localStorage.getItem('token');
   return `${BASE_URL}/reports/${reportType}?export=csv`;
+};
+
+// Download a report CSV with the Authorization header (window.open cannot send headers)
+export const downloadReportCsv = async (reportType) => {
+  const response = await fetch(`${BASE_URL}/reports/${reportType}?export=csv`, {
+    headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
+  });
+  if (!response.ok) {
+    const data = await response.json().catch(() => ({}));
+    throw new Error(data.message || 'Failed to export CSV');
+  }
+  const blob = await response.blob();
+  const url = window.URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = `${reportType}_report.csv`;
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  window.URL.revokeObjectURL(url);
 };
 
 export const globalSearch = async (query) => {
@@ -634,224 +716,3 @@ export const getJobCandidateMatchesAI = async (jobId) => {
   if (!res.success) throw new Error(res.message);
   return res.data;
 };
-
-<<<<<<< HEAD
-// ============================================================
-// Leaves API
-// ============================================================
-export const getLeaves = async (params = {}) => {
-  const query = new URLSearchParams(params).toString();
-  const res = await api.get(`/leaves/?${query}`);
-=======
-// Candidate Profile helper
-export const getMyCandidateProfile = async () => {
-  const res = await api.get('/candidates/me');
->>>>>>> 8ff31b8c099d5cec38965a82ac8c6e030c590ab3
-  if (!res.success) throw new Error(res.message);
-  return res.data;
-};
-
-<<<<<<< HEAD
-export const createLeave = async (data) => {
-  const res = await api.post('/leaves/', data);
-=======
-export const updateMyCandidateProfile = async (data) => {
-  const res = await api.put('/candidates/me', data);
->>>>>>> 8ff31b8c099d5cec38965a82ac8c6e030c590ab3
-  if (!res.success) throw new Error(res.message);
-  return res.data;
-};
-
-<<<<<<< HEAD
-export const approveLeave = async (id) => {
-  const res = await api.patch(`/leaves/${id}/approve`, {});
-=======
-export const deactivateCandidate = async (id) => {
-  const res = await api.patch(`/candidates/${id}/status`, { status: 'Inactive' });
->>>>>>> 8ff31b8c099d5cec38965a82ac8c6e030c590ab3
-  if (!res.success) throw new Error(res.message);
-  return res.data;
-};
-
-<<<<<<< HEAD
-export const rejectLeave = async (id, reason = '') => {
-  const res = await api.patch(`/leaves/${id}/reject`, { rejection_reason: reason });
-  if (!res.success) throw new Error(res.message);
-  return res.data;
-};
-
-export const cancelLeave = async (id) => {
-  const res = await api.patch(`/leaves/${id}/cancel`, {});
-  if (!res.success) throw new Error(res.message);
-  return res.data;
-};
-
-// ============================================================
-// Attendance API
-// ============================================================
-export const getAttendance = async (params = {}) => {
-  const query = new URLSearchParams(params).toString();
-  const res = await api.get(`/attendance/?${query}`);
-  if (!res.success) throw new Error(res.message);
-  return res.data;
-};
-
-export const createAttendance = async (data) => {
-  const res = await api.post('/attendance/', data);
-  if (!res.success) throw new Error(res.message);
-  return res.data;
-};
-
-export const updateAttendance = async (id, data) => {
-  const res = await api.put(`/attendance/${id}`, data);
-  if (!res.success) throw new Error(res.message);
-  return res.data;
-};
-
-export const checkIn = async () => {
-  const res = await api.post('/attendance/check-in', {});
-  if (!res.success) throw new Error(res.message);
-  return res.data;
-};
-
-export const checkOut = async () => {
-  const res = await api.post('/attendance/check-out', {});
-  if (!res.success) throw new Error(res.message);
-  return res.data;
-};
-
-export const getAttendanceSummary = async (employeeId) => {
-  const res = await api.get(`/attendance/summary/${employeeId}`);
-  if (!res.success) throw new Error(res.message);
-  return res.data;
-};
-
-// ============================================================
-// Performance Reviews API
-// ============================================================
-export const getPerformanceReviews = async (params = {}) => {
-  const query = new URLSearchParams(params).toString();
-  const res = await api.get(`/performance/?${query}`);
-  if (!res.success) throw new Error(res.message);
-  return res.data;
-};
-
-export const createPerformanceReview = async (data) => {
-  const res = await api.post('/performance/', data);
-  if (!res.success) throw new Error(res.message);
-  return res.data;
-};
-
-export const updatePerformanceReview = async (id, data) => {
-  const res = await api.put(`/performance/${id}`, data);
-  if (!res.success) throw new Error(res.message);
-  return res.data;
-};
-
-export const deletePerformanceReview = async (id) => {
-  const res = await api.delete(`/performance/${id}`);
-  if (!res.success) throw new Error(res.message);
-  return res.data;
-};
-
-export const getDepartments = async () => {
-  const res = await api.get('/departments/');
-  if (!res.success) throw new Error(res.message);
-  return res.data;
-};
-=======
-// Bind all named helpers onto api object for universal compatibility
-Object.assign(api, {
-  getUsers,
-  getUser,
-  createUser,
-  updateUser,
-  deactivateUser,
-  getRoles,
-  getRole,
-  getEmployees,
-  getJobs,
-  searchJobs,
-  getJob,
-  createJob,
-  updateJob,
-  changeJobStatus,
-  archiveJob,
-  getCandidates,
-  getCandidate,
-  createCandidate,
-  updateCandidate,
-  updateCandidateStatus,
-  deactivateCandidate,
-  getMyCandidateProfile,
-  updateMyCandidateProfile,
-  getApplications,
-  getApplication,
-  createApplication,
-  updateApplicationStatus,
-  withdrawApplication,
-  shortlistApplication,
-  uploadResume,
-  getResumes,
-  getResume,
-  deleteResume,
-  downloadResume,
-  extractSkills,
-  getCandidateMatches,
-  getJobCandidateMatches,
-  getJobCandidateMatchesList,
-  getCandidateRankings,
-  getInterviews,
-  getInterview,
-  createInterview,
-  updateInterview,
-  updateInterviewStatus,
-  deleteInterview,
-  submitInterviewFeedback,
-  getInterviewFeedback,
-  updateInterviewFeedback,
-  getOffers,
-  getOffer,
-  createOffer,
-  updateOffer,
-  updateOfferStatus,
-  deleteOffer,
-  acceptOffer,
-  declineOffer,
-  getAttendance,
-  createAttendance,
-  updateAttendance,
-  checkIn,
-  checkOut,
-  getAttendanceSummary,
-  getLeaves,
-  createLeave,
-  approveLeave,
-  rejectLeave,
-  cancelLeave,
-  getPerformanceReviews,
-  createPerformanceReview,
-  updatePerformanceReview,
-  deletePerformanceReview,
-  getTrainingCourses,
-  createTrainingCourse,
-  assignTraining,
-  getMyTrainings,
-  updateTrainingAssignment,
-  getAllTrainingAssignments,
-  getNotifications,
-  markNotificationRead,
-  markAllNotificationsRead,
-  deleteNotification,
-  getDashboardStats,
-  getAnalyticsOverview,
-  getHeadcountReport,
-  getAttendanceReport,
-  getRecruitmentReport,
-  getPerformanceReport,
-  getReportCsvUrl,
-  globalSearch,
-  getMyCareerRecommendations,
-  getJobCandidateMatchesAI
-});
->>>>>>> 8ff31b8c099d5cec38965a82ac8c6e030c590ab3
