@@ -65,10 +65,25 @@ def create_app(config_class=Config):
     # Health check route
     @app.route('/api/health', methods=['GET'])
     def health_check():
-        return jsonify({
+        db_status = "connected"
+        db_error = None
+        try:
+            from sqlalchemy import text
+            with db.engine.connect() as conn:
+                conn.execute(text("SELECT 1"))
+        except Exception as exc:
+            db_status = "disconnected"
+            db_error = str(exc)
+        payload = {
             "status": "success",
-            "message": "AI HR Platform API is running"
-        })
+            "message": "AI HR Platform API is running",
+            "database": db_status
+        }
+        if db_error:
+            payload["database_error"] = db_error
+            payload["status"] = "degraded"
+        code = 200 if db_status == "connected" else 503
+        return jsonify(payload), code
 
 
     # Register blueprints
