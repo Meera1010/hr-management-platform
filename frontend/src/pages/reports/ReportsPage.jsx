@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Card, Nav, Table, Button, Spinner, Alert } from 'react-bootstrap';
-import { getHeadcountReport, getAttendanceReport, getRecruitmentReport, getPerformanceReport, getReportCsvUrl } from '../../services/api';
+import { getHeadcountReport, getAttendanceReport, getRecruitmentReport, getPerformanceReport, downloadReportCsv } from '../../services/api';
 
 const ReportsPage = () => {
   const [activeTab, setActiveTab] = useState('headcount');
@@ -30,8 +30,13 @@ const ReportsPage = () => {
     }
   };
 
-  const handleDownloadCsv = () => {
-    window.open(getReportCsvUrl(activeTab), '_blank');
+  const handleDownloadCsv = async () => {
+    try {
+      setError(null);
+      await downloadReportCsv(activeTab);
+    } catch (err) {
+      setError(err.message || 'Failed to export CSV');
+    }
   };
 
   return (

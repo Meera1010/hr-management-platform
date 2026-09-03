@@ -36,18 +36,8 @@ import CandidateOffers from './pages/candidate/CandidateOffers';
 import EmployeeAttendance from './pages/employee/EmployeeAttendance';
 import EmployeeLeaves from './pages/employee/EmployeeLeaves';
 import EmployeePerformance from './pages/employee/EmployeePerformance';
-
-// HR Modules
-import HRAttendance from './pages/hr/HRAttendance';
-import HRLeaves from './pages/hr/HRLeaves';
-import HRPerformance from './pages/hr/HRPerformance';
 import PerformanceForm from './pages/hr/PerformanceForm';
 import OfferForm from './pages/hr/OfferForm';
-
-// Employee Self-Service Modules
-import EmployeeAttendance from './pages/employee/EmployeeAttendance';
-import EmployeeLeaves from './pages/employee/EmployeeLeaves';
-import EmployeePerformance from './pages/employee/EmployeePerformance';
 
 // Step 11+ Components and Pages
 import HRDashboard from './pages/dashboards/HRDashboard';
@@ -432,80 +422,11 @@ function Navigation() {
             {/* Candidate Portal Links */}
             {userRole === 'Candidate' && (
               <>
-<<<<<<< HEAD
-                {/* Recruitment Dropdown */}
-                <li className="nav-item dropdown">
-                  <a className="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Recruitment</a>
-                  <ul className="dropdown-menu">
-                    <li><Link className="dropdown-item" to="/jobs">Manage Jobs</Link></li>
-                    <li><Link className="dropdown-item" to="/hr/candidates">Candidates Pool</Link></li>
-                    <li><Link className="dropdown-item" to="/applications">Applications</Link></li>
-                    <li><Link className="dropdown-item" to={currentUser?.role === 'Recruiter' ? "/recruiter/resumes" : "/hr/resumes"}>Resumes Vault</Link></li>
-                    {currentUser?.role === 'Recruiter' && (
-                      <>
-                        <li><Link className="dropdown-item" to="/recruiter/rankings">AI Resume Rankings</Link></li>
-                        <li><Link className="dropdown-item" to="/recruiter/interviews">Interviews</Link></li>
-                      </>
-                    )}
-                    {(currentUser?.role === 'HR' || currentUser?.role === 'Admin') && (
-                      <li><Link className="dropdown-item" to="/hr/offers">Offers Management</Link></li>
-                    )}
-                  </ul>
-                </li>
-
-                {/* Workforce & HR Dropdown */}
-                <li className="nav-item dropdown">
-                  <a className="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Workforce & HR</a>
-                  <ul className="dropdown-menu">
-                    <li><Link className="dropdown-item" to="/hr/employees">Employee Directory</Link></li>
-                    <li><Link className="dropdown-item" to="/hr/departments">Departments</Link></li>
-                    <li><Link className="dropdown-item" to="/hr/leaves">Leave Management</Link></li>
-                    <li><Link className="dropdown-item" to="/hr/attendance">Attendance</Link></li>
-                    <li><Link className="dropdown-item" to="/hr/performance">Performance Reviews</Link></li>
-                    <li><Link className="dropdown-item" to="/lifecycle">Onboarding & Exit</Link></li>
-                    <li><Link className="dropdown-item" to="/okrs">Performance & OKRs</Link></li>
-                    <li><Link className="dropdown-item" to="/workforce">Workforce Planner</Link></li>
-                  </ul>
-                </li>
-
-                {/* Operations & Finance Dropdown */}
-                <li className="nav-item dropdown">
-                  <a className="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Operations</a>
-                  <ul className="dropdown-menu">
-                    <li><Link className="dropdown-item" to="/payroll">Payroll & Tax</Link></li>
-                    <li><Link className="dropdown-item" to="/assets">IT Assets</Link></li>
-                    <li><Link className="dropdown-item" to="/timesheets">Timesheets</Link></li>
-                    <li><Link className="dropdown-item" to="/expenses">Expense Claims</Link></li>
-                    <li><Link className="dropdown-item" to="/compliance">Compliance Center</Link></li>
-                  </ul>
-                </li>
-
-                {/* Analytics Dropdown */}
-                <li className="nav-item dropdown">
-                  <a className="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Analytics</a>
-                  <ul className="dropdown-menu">
-                    <li><Link className="dropdown-item" to="/training">LXP Training</Link></li>
-                    <li><Link className="dropdown-item" to="/analytics">Executive Analytics</Link></li>
-                    <li><Link className="dropdown-item" to="/reports">Reports Generator</Link></li>
-                  </ul>
-                </li>
-
-                {currentUser?.role === 'Admin' && (
-                  <li className="nav-item dropdown">
-                    <a className="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Admin Settings</a>
-                    <ul className="dropdown-menu">
-                      <li><Link className="dropdown-item" to="/admin/users">Manage Users</Link></li>
-                      <li><Link className="dropdown-item" to="/admin/roles">Manage Roles</Link></li>
-                    </ul>
-                  </li>
-                )}
-=======
                 <li className="nav-item"><Link className="nav-link" to="/candidate/jobs" onClick={handleMenuClick}>🔍 Find Jobs</Link></li>
                 <li className="nav-item"><Link className="nav-link" to="/candidate/applications" onClick={handleMenuClick}>📥 My Applications</Link></li>
                 <li className="nav-item"><Link className="nav-link" to="/candidate/interviews" onClick={handleMenuClick}>🗓️ My Interviews</Link></li>
                 <li className="nav-item"><Link className="nav-link" to="/candidate/offers" onClick={handleMenuClick}>💼 My Offers</Link></li>
                 <li className="nav-item"><Link className="nav-link text-warning fw-semibold" to="/career-recommendations" onClick={handleMenuClick}>✨ AI Recommendations</Link></li>
->>>>>>> 8ff31b8c099d5cec38965a82ac8c6e030c590ab3
               </>
             )}
 
@@ -519,24 +440,6 @@ function Navigation() {
                 <li className="nav-item"><Link className="nav-link text-warning fw-semibold" to="/career-recommendations" onClick={handleMenuClick}>✨ AI Growth</Link></li>
               </>
             )}
-<<<<<<< HEAD
-
-            {currentUser?.role === 'Employee' && (
-              <>
-                <li className="nav-item"><Link className="nav-link" to="/payroll">My Payroll</Link></li>
-                <li className="nav-item"><Link className="nav-link" to="/timesheets">My Timesheet</Link></li>
-                <li className="nav-item"><Link className="nav-link" to="/expenses">My Expenses</Link></li>
-                <li className="nav-item"><Link className="nav-link" to="/employee/attendance">My Attendance</Link></li>
-                <li className="nav-item"><Link className="nav-link" to="/employee/leaves">My Leaves</Link></li>
-                <li className="nav-item"><Link className="nav-link" to="/employee/performance">My Performance</Link></li>
-                <li className="nav-item"><Link className="nav-link" to="/learning">LXP Courses</Link></li>
-                <li className="nav-item"><Link className="nav-link text-warning" to="/career-recommendations">AI Growth</Link></li>
-              </>
-            )}
-
-
-=======
->>>>>>> 8ff31b8c099d5cec38965a82ac8c6e030c590ab3
           </ul>
 
           <div className="d-flex align-items-center gap-2">
@@ -631,17 +534,11 @@ function App() {
               <Route path="/hr/employees" element={<Employees />} />
               <Route path="/hr/employees/new" element={<EmployeeForm />} />
               <Route path="/hr/employees/:id" element={<EmployeeProfile />} />
-<<<<<<< HEAD
-              <Route path="/hr/leaves" element={<HRLeaves />} />
-              <Route path="/hr/attendance" element={<HRAttendance />} />
-              <Route path="/hr/performance" element={<HRPerformance />} />
-=======
               <Route path="/hr/attendance" element={<HRAttendance />} />
               <Route path="/hr/leaves" element={<HRLeaves />} />
               <Route path="/hr/performance" element={<HRPerformance />} />
               <Route path="/hr/performance/new" element={<PerformanceForm />} />
               <Route path="/hr/offers/new" element={<OfferForm />} />
->>>>>>> 8ff31b8c099d5cec38965a82ac8c6e030c590ab3
             </Route>
 
             {/* Employee Self-Service Routes */}
