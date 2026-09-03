@@ -10,7 +10,7 @@ A comprehensive, production-grade enterprise web application built for modern HR
 ## Architecture & Technology Stack
 
 - **Frontend:** React 18, React Router v7, React Bootstrap 5, Vite, Vanilla CSS & Glassmorphism design system.
-- **Backend:** Python 3.7+, Flask 2.x, Flask-SQLAlchemy, Flask-JWT-Extended, SQLite.
+- **Backend:** Python 3.7+, Flask 2.x, Flask-SQLAlchemy, Flask-JWT-Extended, PostgreSQL (Neon cloud) via `psycopg2`.
 - **Security & Authentication:** JWT bearer tokens, password hashing via werkzeug, Role-Based Access Control (RBAC) across 6 distinct roles (`Admin`, `HR`, `Recruiter`, `Employee`, `Candidate`, `Interviewer`).
 - **AI & Analytics Engine:** Keyword skill extraction, rule-based resume parsing, TF-IDF / heuristic candidate matching score calculation, transparent decision-support career recommendation algorithms.
 
@@ -44,39 +44,58 @@ A comprehensive, production-grade enterprise web application built for modern HR
 ### Prerequisites
 - Python 3.7+
 - Node.js 18+ and npm
+- A PostgreSQL database (the app is configured for a Neon cloud DB by default)
 
-### Backend Setup
+### Quick Start (Windows, recommended)
+Run these two batch scripts in two separate terminals (backend must be running before the frontend):
+
 ```bash
-# Navigate to backend folder
+# Terminal 1 - backend (installs deps, tests Neon connection, seeds DB, starts server)
+setup_and_run.bat
+
+# Terminal 2 - frontend (installs deps and starts Vite dev server)
+start_frontend.bat
+```
+
+Then open `http://localhost:5173`.
+
+### Backend Setup (manual)
+```bash
 cd backend
 
-# Create & activate virtual environment (optional)
+# Create & activate virtual environment
 python -m venv venv
-venv\Scripts\activate # On Windows
+venv\Scripts\activate   # On Windows
 
-# Install dependencies
+# Install dependencies (includes psycopg2-binary for PostgreSQL)
 pip install -r requirements.txt
 
-# Initialize & seed database with fictional demo data
+# Test the Neon PostgreSQL connection (must print "CONNECTION OK")
+python test_db_connection.py
+
+# Create tables & seed database with fictional demo data
 python seed.py
 
 # Run the Flask backend API server (runs on http://localhost:5001)
 python run.py
 ```
 
-### Frontend Setup
+### Database Configuration
+The app connects to **PostgreSQL** by default. Set the connection string in `backend/.env`:
+
+```
+DATABASE_URL=postgresql+psycopg2://USER:PASSWORD@HOST:5432/DATABASE?sslmode=require
+```
+
+A Neon cloud connection string is pre-configured in `backend/.env`. If you prefer SQLite for local-only development, set `DATABASE_URL=sqlite:///../../database/hr_platform.db`.
+
+### Frontend Setup (manual)
 ```bash
-# Navigate to frontend folder
 cd frontend
-
-# Install dependencies
 npm install
-
-# Run the Vite development server (runs on http://localhost:5173)
-npm run start
-
-# Or build for production
-npm run build
+npm run start   # starts Vite dev server on http://localhost:5173
+# or
+npm run build   # build for production
 ```
 
 ---
@@ -125,4 +144,28 @@ Documentation LOC   :      255
 TOTAL LOC           :   14,869
 ========================================
 ```
-"# hr-management-platform" 
+
+---
+
+## Troubleshooting
+
+### Blank / white page in the browser
+- **Hard refresh** (Ctrl+Shift+R) to clear the stale cached bundle.
+- Make sure the **frontend** (`npm run dev`, port 5173) and **backend** (`python run.py`, port 5001) are both running.
+- Bootstrap is bundled locally now (no CDN dependency), so the UI renders even offline.
+- Open **DevTools → Console**. If you see a red `TypeError`, note the `file:line` it points to and report it.
+
+### Backend "not working" / module not found
+- Ensure the venv is active and the Postgres driver is installed:
+  `pip install psycopg2-binary`
+- Run `python test_db_connection.py` — it must print `CONNECTION OK`. If it errors, the DB URL or network is wrong.
+
+### Can't log in after switching to PostgreSQL
+- The Postgres tables start empty. Run `python seed.py` **once** to create tables and demo users (creates roles + `admin@example.com` etc.). The seed is idempotent, so re-running it is safe.
+
+### Port already in use
+- Change the backend port in `backend/.env` (`PORT=5001`) or the frontend; ensure nothing else is using 5173/5001.
+
+### CORS / API requests failing in the frontend
+- Frontend calls `http://localhost:5001/api` — confirm that matches your backend port.
+- `CORS_ORIGINS` in `backend/.env` must include `http://localhost:5173`.
