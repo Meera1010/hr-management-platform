@@ -14,8 +14,8 @@ const GlobalSearchInput = () => {
   };
 
   return (
-    <Form onSubmit={handleSearch} className="d-flex me-3">
-      <InputGroup size="sm" style={{ width: '220px' }}>
+    <Form onSubmit={handleSearch} className="d-flex me-2 my-1 my-xl-0">
+      <InputGroup size="sm" style={{ minWidth: '130px', maxWidth: '200px' }}>
         <Form.Control
           type="search"
           placeholder="Global Search..."

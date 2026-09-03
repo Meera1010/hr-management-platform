@@ -281,8 +281,8 @@ function Navigation() {
   const isRecruiterOrHR = isHRorAdmin || userRole === 'Recruiter';
 
   return (
-    <nav className="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm sticky-top">
-      <div className="container">
+    <nav className="navbar navbar-expand-xl navbar-dark bg-dark shadow-sm sticky-top">
+      <div className="container-fluid px-3 px-xl-4">
         <Link className="navbar-brand fw-bold text-primary d-flex align-items-center gap-2" to={getDashboardLink()} onClick={handleMenuClick}>
           <span>⚡ AI HR Platform</span>
         </Link>

@@ -2,7 +2,7 @@ import React from 'react';
 import { Navigate, Outlet } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
-const ProtectedRoute = ({ allowedRoles }) => {
+const ProtectedRoute = ({ allowedRoles, children }) => {
   const { currentUser, loading } = useAuth();
 
   if (loading) {
@@ -20,7 +20,8 @@ const ProtectedRoute = ({ allowedRoles }) => {
     return <Navigate to="/login" replace />;
   }
 
-  if (allowedRoles && !allowedRoles.includes(currentUser.role)) {
+  const role = currentUser?.role || currentUser?.role_name;
+  if (allowedRoles && !allowedRoles.includes(role)) {
     // Logged in but insufficient role
     return (
       <div className="container mt-5">
@@ -32,7 +33,7 @@ const ProtectedRoute = ({ allowedRoles }) => {
     );
   }
 
-  return <Outlet />;
+  return children ? children : <Outlet />;
 };
 
 export default ProtectedRoute;

@@ -1,0 +1,2 @@
+Candidate Resume
+Skills: Python, Flask, SQL
