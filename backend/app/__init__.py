@@ -18,7 +18,8 @@ def create_app(config_class=Config):
 
     # Initialize extensions
     db.init_app(app)
-    CORS(app)
+    cors_origins = [o.strip() for o in os.environ.get('CORS_ORIGINS', '').split(',') if o.strip()]
+    CORS(app, resources={r"/api/*": {"origins": cors_origins}} if cors_origins else {})
     
     jwt = JWTManager(app)
     
